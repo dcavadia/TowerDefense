@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class Creep : MonoBehaviour
 {
+    public CreepData data;
+
     public float health;
     public float speed;
 
     private Vector3 targetPosition;
-    //private int targetWaypointIndex;
+    private bool coroutineStarted = false;
 
     // Delegate types
     public delegate void CreepKilledHandler(Creep creep);
@@ -18,7 +20,7 @@ public class Creep : MonoBehaviour
     public event CreepKilledHandler CreepKilled;
     public event CreepReachedBaseHandler CreepReachedBase;
 
-    public void TakeDamage(float damage)
+    public virtual void TakeDamage(float damage)
     {
         health -= damage;
         if (health <= 0)
@@ -48,25 +50,30 @@ public class Creep : MonoBehaviour
         Destroy(gameObject);
     }
 
-    protected virtual void Update()
+    protected virtual void FixedUpdate()
     {
-        MoveToWaypoint();
+        if (!coroutineStarted)
+        {
+            StartCoroutine(MoveToWaypointCoroutine());
+            coroutineStarted = true;
+        }
     }
 
-    private void MoveToWaypoint()
+    //Set it as a coroutine instead of update since this can be expensive and inefficient, especially if you have a lot of creeps in your game. 
+    protected virtual IEnumerator MoveToWaypointCoroutine()
     {
-        /*if (targetWaypointIndex >= Waypoints.Instance.waypoints.Length)
+        while (true)
         {
-            // Reached end of path
-            return;
-        }*/
+            yield return new WaitForSeconds(0.1f); // wait for 0.1 seconds
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
 
-        //targetPosition = Waypoints.Instance.waypoints[targetWaypointIndex].position;
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
-
-        /*if (transform.position == targetPosition)
-        {
-            targetWaypointIndex++;
-        }*/
+            if (transform.position == targetPosition)
+            {
+                // Reached waypoint, get next waypoint
+                ReachedBase();
+                coroutineStarted = false;
+                yield break; // exit coroutine
+            }
+        }
     }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SmallCreep : Creep
+public class CreepSmall : Creep
 {
     public override void TakeDamage(float damage)
     {
