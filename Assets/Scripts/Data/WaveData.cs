@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TreeEditor;
@@ -9,8 +10,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Wave", menuName = "Tower Defense/Create New Wave", order = 1)]
 public class WaveData : ScriptableObject
 {
-    public CreepData[] creepDataArray; // An array of CreepData to spawn in this wave
+    public CreepBattle[] creepDataArray; // An array of CreepData to spawn in this wave
     public float timeBetweenCreeps; // The time to wait between spawning each creep
     public float waveDelay; // The time to wait before starting this wave
 }
 
+[Serializable]
+public class CreepBattle
+{
+    public CreepData creepData;
+    public float spawnPointId;
+}
