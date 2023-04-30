@@ -10,6 +10,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Wave", menuName = "Tower Defense/Create New Wave", order = 1)]
 public class WaveData : ScriptableObject
 {
+    [Tooltip("First creep to go out is Element 0")]
     public CreepBattle[] creepDataArray; // An array of CreepData to spawn in this wave
     public float timeBetweenCreeps; // The time to wait between spawning each creep
     public float waveDelay; // The time to wait before starting this wave
