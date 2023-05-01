@@ -31,5 +31,5 @@ MonoBehaviour:
     spawnPointId: 4
   - creepData: {fileID: 11400000, guid: 24b00f39e5ee2e446bf4cdab03d301ce, type: 2}
     spawnPointId: 2
-  timeBetweenCreeps: 1
+  timeBetweenCreeps: 5
   waveDelay: 5

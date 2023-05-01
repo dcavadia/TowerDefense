@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CreepBig
   m_EditorClassIdentifier: 
   prefab: {fileID: 6062474898863262898, guid: 03dfb865ef6474e68a8586ba6eb0492d, type: 3}
-  baseSpeed: 5
+  baseSpeed: 40
   baseHealth: 5
   baseCoins: 2
   speedModifier: 1

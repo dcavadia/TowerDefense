@@ -214,6 +214,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 266367351}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &289568359 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3563692720844785907, guid: 458d7fbe6b08d464f9bbc0ea868876a4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1233108153}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &625690872
 GameObject:
   m_ObjectHideFlags: 0
@@ -811,6 +817,7 @@ MonoBehaviour:
   - spawnPointId: 4
     position: {fileID: 1252222132}
   LevelData: {fileID: 11400000, guid: 704fa824e81da3b44b41a71250be2d06, type: 2}
+  Base: {fileID: 289568359}
 --- !u!4 &1936506749
 Transform:
   m_ObjectHideFlags: 0

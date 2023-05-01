@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Creep : MonoBehaviour
 {
-    public CreepData data;
-
-    public float health;
-    public float speed;
+    CreepData data;
+    float health;
+    float speed;
+    int coins;
 
     private Vector3 targetPosition;
     private bool coroutineStarted = false;
@@ -19,6 +19,19 @@ public class Creep : MonoBehaviour
     // Event fields
     public event CreepKilledHandler CreepKilled;
     public event CreepReachedBaseHandler CreepReachedBase;
+
+    public virtual void Init(CreepData creepData, Vector3 basePosition)
+    {
+        data = creepData;
+        health = creepData.baseHealth;
+        speed = creepData.baseSpeed;
+        targetPosition = basePosition;
+
+        // Apply modifiers
+        speed *= creepData.speedModifier;
+        health *= creepData.healthModifier;
+        coins *= creepData.coinsModifier;
+    }
 
     public virtual void TakeDamage(float damage)
     {
@@ -47,7 +60,8 @@ public class Creep : MonoBehaviour
     protected virtual void Die()
     {
         // Play death animation, remove from scene, etc.
-        Destroy(gameObject);
+        WaveController.Instance.AddCreepToPool(this);
+        //Destroy(gameObject);
     }
 
     protected virtual void FixedUpdate()

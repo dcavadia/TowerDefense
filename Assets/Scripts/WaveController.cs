@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 //Use a combination of the Observer, Command and Object Pooling patterns
@@ -12,6 +14,7 @@ public class WaveController : SingletonComponent<WaveController>
 {
     public List<SpawnPointData> SpawnPoints;
     public LevelData LevelData;
+    public GameObject Base;
 
     // Use the Observer pattern to notify the turrets of new creeps
     //public event Action<CreepController> OnCreepSpawned;
@@ -20,12 +23,17 @@ public class WaveController : SingletonComponent<WaveController>
     private int creepsRemainingInWave = 0;
     private bool isWaveActive = false;
 
-    private Queue<Creep> creepPool = new Queue<Creep>();
+    // List of all the types of Creep
+    private List<Type> derivedTypes = new List<Type>();
+
+    // Dictionary to store the object pools as reflections
+    private Dictionary<Type, ObjectPool<Creep>> creepPools = new Dictionary<Type, ObjectPool<Creep>>();
 
 
     // Start is called before the first frame update
     void Start()
     {
+        CreateObjectPools();
         StartNextWave();
     }
 
@@ -40,6 +48,28 @@ public class WaveController : SingletonComponent<WaveController>
                 StartNextWave();
 
             }
+        }
+    }
+    
+    private void CreateObjectPools()
+    {
+        // Get all the types that derive from Creep
+        foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            foreach (Type type in assembly.GetTypes())
+            {
+                if (type.IsSubclassOf(typeof(Creep)))
+                {
+                    derivedTypes.Add(type);
+                }
+            }
+        }
+
+        // Create object pools for each type of Creep
+        foreach (Type type in derivedTypes)
+        {
+            ObjectPool<Creep> pool = new ObjectPool<Creep>();
+            creepPools[type] = pool;
         }
     }
 
@@ -69,13 +99,11 @@ public class WaveController : SingletonComponent<WaveController>
             CreepData creepData = waveData.creepDataArray[i].creepData;
 
             SpawnPointData spawnPoint = SpawnPoints.Find(spawn => spawn.spawnPointId == waveData.creepDataArray[i].spawnPointId);
-
             Creep creepController = SpawnCreep(creepData, spawnPoint);
 
             creepsRemainingInWave--;
 
             yield return new WaitForSeconds(waveData.timeBetweenCreeps);
-
         }
 
         isWaveActive = true;
@@ -84,22 +112,29 @@ public class WaveController : SingletonComponent<WaveController>
     // Use object pooling to improve performance
     private Creep SpawnCreep(CreepData creepData, SpawnPointData spawnPoint)
     {
-        Creep creepController;
+        ObjectPool<Creep> pool;
+        Component component = creepData.prefab.GetComponent<Creep>();
+        Type type = component.GetType();
 
-        if (creepPool.Count > 0)
+        if (!creepPools.TryGetValue(type, out pool))
         {
-            // Use an existing creep from the pool
-            creepController = creepPool.Dequeue();
-            creepController.gameObject.SetActive(true);
-            creepController.transform.position = spawnPoint.position.transform.position;
+            Debug.LogErrorFormat("No object pool found for type {0}", type);
+            return null;
+        }
+
+        Creep creepController = pool.GetObjectFromPool();
+        if(creepController == null)
+        {
+            GameObject newCreep = Instantiate(creepData.prefab, spawnPoint.position.transform.position, Quaternion.identity);
+            creepController = newCreep.GetComponent<Creep>();
         }
         else
         {
-            // Create a new creep
-            GameObject newCreep = Instantiate(creepData.prefab, spawnPoint.position.transform.position, Quaternion.identity);
-            creepController = newCreep.GetComponent<Creep>();
-            //creepController.Init(creepData);
+            creepController.transform.position = spawnPoint.position.transform.position;
+            creepController.gameObject.SetActive(true);
         }
+
+        creepController.Init(creepData, Base.transform.position);
 
         return creepController;
     }
@@ -107,11 +142,17 @@ public class WaveController : SingletonComponent<WaveController>
     // Add creeps to the object pool when they are destroyed
     public void AddCreepToPool(Creep creepController)
     {
-        creepController.gameObject.SetActive(false);
-        creepPool.Enqueue(creepController);
+        Type type = creepController.GetType();
+        ObjectPool<Creep> pool;
+
+        if (!creepPools.TryGetValue(type, out pool))
+        {
+            Debug.LogErrorFormat("No object pool found for type {0}", type);
+            return;
+        }
+
+        pool.ReturnObjectToPool(creepController);
     }
-
-
 }
 
 
