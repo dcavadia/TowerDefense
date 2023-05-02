@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class TurretPlacementController : SingletonComponent<TurretPlacementController>
@@ -74,4 +75,15 @@ public class TurretPlacementController : SingletonComponent<TurretPlacementContr
         }
     }
 
+    private void OnDrawGizmos()
+    {
+        if (turretGhost != null && selectedTurretData != null)
+        {
+            // Draw a wire disc with the range of the ghost turret
+            Handles.color = new Color(1f, 0f, 0f, 1f);
+            Handles.DrawWireDisc(turretGhost.transform.position, Vector3.up, selectedTurretData.range);
+        }
+    }
 }
+    
+

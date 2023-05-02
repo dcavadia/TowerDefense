@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Abstract Factory and State patterns
 public abstract class Turret : MonoBehaviour
 {
     protected Transform target;

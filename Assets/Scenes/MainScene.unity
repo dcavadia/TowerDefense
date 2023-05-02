@@ -882,6 +882,7 @@ GameObject:
   - component: {fileID: 1141845970}
   - component: {fileID: 1141845969}
   - component: {fileID: 1141845968}
+  - component: {fileID: 1141845972}
   m_Layer: 5
   m_Name: FreezeTurretButton
   m_TagString: Untagged
@@ -1012,6 +1013,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1141845966}
   m_CullTransparentMesh: 1
+--- !u!114 &1141845972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1141845966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64bfba8a71cd5c943bbca3fb424b4b22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turretData: {fileID: 11400000, guid: efe65ff77c4c4744385e25ea47238950, type: 2}
 --- !u!1 &1219446732
 GameObject:
   m_ObjectHideFlags: 0
