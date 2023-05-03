@@ -7,12 +7,12 @@ using UnityEngine;
 //Provide more flexibility in creating related objects and more decoupling in comparision with an abstract class.
 public abstract class TurretFactory
 {
-    public abstract Turret CreateTurret(Vector3 position, Transform target, float range, TurretData turretData);
+    public abstract Turret CreateTurret(Vector3 position, Creep target, float range, TurretData turretData);
 }
 
 public class TurretRegularFactory : TurretFactory
 {
-    public override Turret CreateTurret(Vector3 position, Transform target, float range, TurretData turretData)
+    public override Turret CreateTurret(Vector3 position, Creep target, float range, TurretData turretData)
     {
         GameObject turretGameObject = Object.Instantiate(turretData.prefab);
         turretGameObject.transform.position = position;
@@ -24,7 +24,7 @@ public class TurretRegularFactory : TurretFactory
 
 public class TurretFreezerFactory : TurretFactory
 {
-    public override Turret CreateTurret(Vector3 position, Transform target, float range, TurretData turretData)
+    public override Turret CreateTurret(Vector3 position, Creep target, float range, TurretData turretData)
     {
         GameObject turretGameObject = Object.Instantiate(turretData.prefab);
         turretGameObject.transform.position = position;

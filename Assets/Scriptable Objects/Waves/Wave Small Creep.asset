@@ -16,12 +16,12 @@ MonoBehaviour:
   - creepData: {fileID: 11400000, guid: 4c844efb18bfa55439274f3a2f1e3003, type: 2}
     spawnPointId: 1
   - creepData: {fileID: 11400000, guid: 4c844efb18bfa55439274f3a2f1e3003, type: 2}
-    spawnPointId: 2
+    spawnPointId: 1
   - creepData: {fileID: 11400000, guid: 4c844efb18bfa55439274f3a2f1e3003, type: 2}
-    spawnPointId: 3
+    spawnPointId: 1
   - creepData: {fileID: 11400000, guid: 4c844efb18bfa55439274f3a2f1e3003, type: 2}
-    spawnPointId: 4
+    spawnPointId: 1
   - creepData: {fileID: 11400000, guid: 4c844efb18bfa55439274f3a2f1e3003, type: 2}
-    spawnPointId: 4
-  timeBetweenCreeps: 2
+    spawnPointId: 1
+  timeBetweenCreeps: 1
   waveDelay: 3

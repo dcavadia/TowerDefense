@@ -11,6 +11,7 @@ public class TurretFreezer : Turret
     public override void Shoot()
     {
         // implementation of shooting logic for this turret type
+        //Debug.Log("Shoot Freeze!");
     }
 }
 

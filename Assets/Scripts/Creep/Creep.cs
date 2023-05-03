@@ -19,6 +19,26 @@ public class Creep : MonoBehaviour
     // Event fields
     public event CreepKilledHandler CreepKilled;
     public event CreepReachedBaseHandler CreepReachedBase;
+    
+
+    protected virtual void OnTriggerEnter(Collider other)
+    {
+        Turret turret = other.gameObject.GetComponent<Turret>();
+        if (turret != null)
+        {
+            turret.OnCreepEnteredRange(this);
+        }
+    }
+
+    protected virtual void OnTriggerExit(Collider other)
+    {
+        Turret turret = other.gameObject.GetComponent<Turret>();
+        if (turret != null)
+        {
+            turret.OnCreepLeftRange(this);
+        }
+    }
+
 
     public virtual void Init(CreepData creepData, Vector3 basePosition)
     {

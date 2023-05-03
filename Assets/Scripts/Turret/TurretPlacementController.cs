@@ -53,15 +53,12 @@ public class TurretPlacementController : SingletonComponent<TurretPlacementContr
                 {
                     // Create a new turret at the clicked location
                     Vector3 turretPosition = new Vector3(placementHit.point.x, 0f, placementHit.point.z);
-                    Transform target = null; // set the target to null, since there's no enemy at the moment
+                    Creep target = null; // set the target to null, since there's no enemy at the moment
                     float range = selectedTurretData.range;
 
                     // Get the correct factory for the selected turret type and create the turret
                     TurretFactory factory = turretFactories[selectedTurretType.GetType()];
                     Turret newTurret = factory.CreateTurret(turretPosition, target, range, selectedTurretData);
-
-                    // Set the turret's state to idle, since it's not attacking yet
-                    newTurret.ChangeState(new IdleState(newTurret));
 
                     // Destroy the ghost turret object
                     Destroy(turretGhost);

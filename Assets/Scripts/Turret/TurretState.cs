@@ -21,6 +21,7 @@ public class IdleState : TurretState
 
     public override void UpdateState()
     {
+        // Check if there is a target in range
         if (turret.TargetInRange())
         {
             turret.ChangeState(new AttackState(turret));
@@ -34,13 +35,14 @@ public class AttackState : TurretState
 
     public override void UpdateState()
     {
+        // Check if the target is still in range
         if (!turret.TargetInRange())
         {
             turret.ChangeState(new IdleState(turret));
         }
         else
         {
-            //Aim
+            // Aim and shoot at the target
             turret.Shoot();
         }
     }
