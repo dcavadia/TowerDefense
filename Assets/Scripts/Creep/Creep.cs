@@ -50,6 +50,8 @@ public class Creep : MonoBehaviour
 
     protected virtual void Die()
     {
+        EconomyManager.Instance.AddCoin(data.baseCoins);
+
         ReturnCreepToPool();
     }
 
@@ -62,7 +64,7 @@ public class Creep : MonoBehaviour
             CreepReachedBase(this);
 
         isMoveToWaypointCoroutineRunning = false;
-        WaveController.Instance.AddCreepToPool(this);
+        WaveManager.Instance.AddCreepToPool(this);
     }
 
     protected virtual void FixedUpdate()

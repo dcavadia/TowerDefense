@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class TurretPlacementController : SingletonComponent<TurretPlacementController>
+public class TurretPlacementManager : SingletonComponent<TurretPlacementManager>
 {
     [SerializeField] private LayerMask placementLayerMask;
-    [SerializeField] private GameObject turretGhostPrefab;
     [SerializeField] private Camera topDownCamera;
 
     private GameObject turretGhost;
@@ -25,6 +24,9 @@ public class TurretPlacementController : SingletonComponent<TurretPlacementContr
 
     public void SelectTurret(TurretData turretData)
     {
+        if (!EconomyManager.Instance.CanAffordTurret(turretData.cost))
+            return;
+
         isPlacingTurret = true;
 
         // Create the ghost turret object
@@ -51,6 +53,9 @@ public class TurretPlacementController : SingletonComponent<TurretPlacementContr
                 // Raycast to see if the turret can be placed at the clicked location
                 if (Physics.Raycast(ray, out RaycastHit placementHit, Mathf.Infinity, placementLayerMask))
                 {
+                    //Purchase
+                    EconomyManager.Instance.PurchaseTurret(selectedTurretData.cost);
+
                     // Create a new turret at the clicked location
                     Vector3 turretPosition = new Vector3(placementHit.point.x, 0f, placementHit.point.z);
                     Creep target = null; // set the target to null, since there's no enemy at the moment

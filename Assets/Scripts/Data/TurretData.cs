@@ -7,6 +7,7 @@ public class TurretData : ScriptableObject
 {
     public GameObject prefab;
     public GameObject projectile;
+    public float cost;
     public float range;
     public float fireRate;
     public float damage;

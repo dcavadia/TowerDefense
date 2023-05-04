@@ -9,6 +9,6 @@ public class TurretSelectionButton : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        TurretPlacementController.Instance.SelectTurret(turretData);
+        TurretPlacementManager.Instance.SelectTurret(turretData);
     }
 }
