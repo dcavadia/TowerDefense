@@ -18,7 +18,6 @@ public class ObjectPool<T> where T : Component
         if (pool.Count > 0)
         {
             T obj = pool.Dequeue();
-            obj.gameObject.SetActive(true);
             return obj;
         }
         else

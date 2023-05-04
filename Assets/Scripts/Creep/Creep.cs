@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
 
 public class Creep : MonoBehaviour
@@ -10,7 +11,7 @@ public class Creep : MonoBehaviour
     int coins;
 
     private Vector3 targetPosition;
-    private bool coroutineStarted = false;
+    private bool isMoveToWaypointCoroutineRunning = false;
 
     // Delegate types
     public delegate void CreepKilledHandler(Creep creep);
@@ -19,26 +20,6 @@ public class Creep : MonoBehaviour
     // Event fields
     public event CreepKilledHandler CreepKilled;
     public event CreepReachedBaseHandler CreepReachedBase;
-    
-
-    protected virtual void OnTriggerEnter(Collider other)
-    {
-        Turret turret = other.gameObject.GetComponent<Turret>();
-        if (turret != null)
-        {
-            turret.OnCreepEnteredRange(this);
-        }
-    }
-
-    protected virtual void OnTriggerExit(Collider other)
-    {
-        Turret turret = other.gameObject.GetComponent<Turret>();
-        if (turret != null)
-        {
-            turret.OnCreepLeftRange(this);
-        }
-    }
-
 
     public virtual void Init(CreepData creepData, Vector3 basePosition)
     {
@@ -58,42 +39,61 @@ public class Creep : MonoBehaviour
         health -= damage;
         if (health <= 0)
         {
-            // Invoke CreepKilled event
-            if (CreepKilled != null)
-            {
-                CreepKilled(this);
-            }
             Die();
         }
     }
 
-    public void ReachedBase()
+    protected virtual void ReachedBase()
     {
-        // Invoke CreepReachedBase event
-        if (CreepReachedBase != null)
-        {
-            CreepReachedBase(this);
-        }
-        Die();
+        ReturnCreepToPool();
     }
 
     protected virtual void Die()
     {
-        // Play death animation, remove from scene, etc.
+        ReturnCreepToPool();
+    }
+
+    protected virtual void ReturnCreepToPool()
+    {
+        if (CreepKilled != null)
+            CreepKilled(this);
+
+        if (CreepReachedBase != null)
+            CreepReachedBase(this);
+
+        isMoveToWaypointCoroutineRunning = false;
         WaveController.Instance.AddCreepToPool(this);
-        //Destroy(gameObject);
     }
 
     protected virtual void FixedUpdate()
     {
-        if (!coroutineStarted)
+        if (!isMoveToWaypointCoroutineRunning && gameObject.activeSelf)
         {
             StartCoroutine(MoveToWaypointCoroutine());
-            coroutineStarted = true;
+            isMoveToWaypointCoroutineRunning = true;
         }
     }
 
-    //Set it as a coroutine instead of update since this can be expensive and inefficient, especially if you have a lot of creeps in your game. 
+    protected virtual void OnTriggerEnter(Collider other)
+    {
+        Turret turret = other.gameObject.GetComponent<Turret>();
+        if (turret != null)
+        {
+            turret.OnCreepEnteredRange(this);
+        }
+    }
+
+    protected virtual void OnTriggerExit(Collider other)
+    {
+        Turret turret = other.gameObject.GetComponent<Turret>();
+        if (turret != null)
+        {
+            turret.OnCreepLeftRange(this);
+        }
+    }
+
+    //All creeps move in the same way, in the case of each creep moving in a different way, just override this functions in each creep.
+    //Coroutine instead of update since that can be expensive and inefficient, especially if you have a lot of creeps in your game.
     protected virtual IEnumerator MoveToWaypointCoroutine()
     {
         while (true)
@@ -105,7 +105,6 @@ public class Creep : MonoBehaviour
             {
                 // Reached waypoint, get next waypoint
                 ReachedBase();
-                coroutineStarted = false;
                 yield break; // exit coroutine
             }
         }

@@ -9,4 +9,5 @@ public class TurretData : ScriptableObject
     public GameObject projectile;
     public float range;
     public float fireRate;
+    public float damage;
 }

@@ -17,3 +17,4 @@ MonoBehaviour:
     type: 3}
   range: 10
   fireRate: 1
+  damage: 1
