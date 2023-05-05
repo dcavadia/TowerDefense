@@ -6,6 +6,11 @@ public class PlayerManager : SingletonComponent<PlayerManager>
 {
     private float health = 0f;
 
+    private void Start()
+    {
+        WaveManager.Instance.LastWaveCleared += GameWin;
+    }
+
     public void SetInitialHealth(int amount)
     {
         health = amount;

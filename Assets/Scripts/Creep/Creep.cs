@@ -13,6 +13,7 @@ public class Creep : MonoBehaviour
     private Vector3 targetPosition;
     private bool isMoveToWaypointCoroutineRunning = false;
 
+    // Publish-Subscribe pattern
     // Delegate types
     public delegate void CreepKilledHandler(Creep creep);
     public delegate void CreepReachedBaseHandler(Creep creep);

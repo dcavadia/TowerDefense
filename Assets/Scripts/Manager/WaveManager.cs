@@ -30,6 +30,8 @@ public class WaveManager : SingletonComponent<WaveManager>
     // Dictionary to store the object pools as reflections
     private Dictionary<Type, ObjectPool<Creep>> creepPools = new Dictionary<Type, ObjectPool<Creep>>();
 
+    public delegate void LastWaveClearedHandler();
+    public event LastWaveClearedHandler LastWaveCleared;
 
     // Start match
     void Start()
@@ -87,6 +89,9 @@ public class WaveManager : SingletonComponent<WaveManager>
         if (currentWave >= LevelData.waves.Count)
         {
             Debug.Log("All waves complete!");
+            if (LastWaveCleared != null)
+                LastWaveCleared();
+
             return;
         }
 
