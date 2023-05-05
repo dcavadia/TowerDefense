@@ -11,9 +11,10 @@ public class PlayerManager : SingletonComponent<PlayerManager>
         WaveManager.Instance.LastWaveCleared += GameWin;
     }
 
-    public void SetInitialHealth(int amount)
+    public void SetInitialPlayerData(PlayerData player)
     {
-        health = amount;
+        health = player.startingHealth;
+        EconomyManager.Instance.SetInitialCoins(player.startingCoins);
     }
 
     public void ReduceHealth(Creep creep)

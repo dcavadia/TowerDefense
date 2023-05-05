@@ -57,9 +57,7 @@ public class WaveManager : SingletonComponent<WaveManager>
 
     private void SetPlayerData()
     {
-        EconomyManager.Instance.SetInitialCoins(PlayerData.startingCoins);
-        PlayerManager.Instance.SetInitialHealth(PlayerData.startingHealth);
-
+        PlayerManager.Instance.SetInitialPlayerData(PlayerData); 
     }
     
     private void CreateObjectPools()
