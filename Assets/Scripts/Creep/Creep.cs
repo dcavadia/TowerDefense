@@ -33,6 +33,7 @@ public class Creep : MonoBehaviour
         // Apply modifiers
         speed *= creepData.speedModifier;
         health *= creepData.healthModifier;
+        isMoveToWaypointCoroutineRunning = false;
     }
 
     public virtual void TakeDamage(float damage)
@@ -64,8 +65,6 @@ public class Creep : MonoBehaviour
     {
         if (CreepReturnToPool != null)
             CreepReturnToPool(this);
-
-        isMoveToWaypointCoroutineRunning = false;
     }
 
     protected virtual void FixedUpdate()
