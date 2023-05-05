@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Creep : MonoBehaviour
 {
-    CreepData data;
+    public CreepData data { get; private set; }
     float health;
     float speed;
     int coins;
@@ -49,8 +49,6 @@ public class Creep : MonoBehaviour
         if (CreepReachedBase != null)
             CreepReachedBase(this);
 
-        PlayerManager.Instance.ReduceHealth(data.baseDamage);
-
         ReturnCreepToPool();
     }
 
@@ -58,8 +56,6 @@ public class Creep : MonoBehaviour
     {
         if (CreepKilled != null)
             CreepKilled(this);
-
-        EconomyManager.Instance.AddCoin(data.baseCoins);
 
         ReturnCreepToPool();
     }

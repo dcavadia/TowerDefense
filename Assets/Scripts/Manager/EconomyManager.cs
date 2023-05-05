@@ -21,9 +21,10 @@ public class EconomyManager : SingletonComponent<EconomyManager>
         coins -= cost;
     }
 
-    public void AddCoin(float amount)
+    public void AddCoin(Creep creep)
     {
-        coins += amount;
+        coins += creep.data.baseCoins;
+        creep.CreepKilled -= AddCoin;
     }
 
     public float GetPlayerCoins()

@@ -92,6 +92,7 @@ public class WaveManager : SingletonComponent<WaveManager>
             if (LastWaveCleared != null)
                 LastWaveCleared();
 
+
             return;
         }
 
@@ -147,6 +148,10 @@ public class WaveManager : SingletonComponent<WaveManager>
             creepController.transform.position = spawnPoint.position.transform.position;
             creepController.gameObject.SetActive(true);
         }
+
+        // To remove coupling between Creep -> PlayerManager and Creep -> EconomyManager.
+        creepController.CreepKilled += EconomyManager.Instance.AddCoin;
+        creepController.CreepReachedBase += PlayerManager.Instance.ReduceHealth;
 
         creepController.Init(creepData, Base.transform.position);
 

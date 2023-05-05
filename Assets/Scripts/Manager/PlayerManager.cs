@@ -16,13 +16,14 @@ public class PlayerManager : SingletonComponent<PlayerManager>
         health = amount;
     }
 
-    public void ReduceHealth(float amount)
+    public void ReduceHealth(Creep creep)
     {
-        health -= amount;
+        health -= creep.data.baseDamage;
         if (health <= 0)
         {
             GameOver();
         }
+        creep.CreepReachedBase -= ReduceHealth;
     }
 
     public float GetPlayerHealth()
