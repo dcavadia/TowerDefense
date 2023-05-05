@@ -16,15 +16,25 @@ public class PlayerManager : SingletonComponent<PlayerManager>
         health -= amount;
         if (health <= 0)
         {
-            // Player has lost the game
-            //GameManager.Instance.GameOver();
-            Debug.Log("GameOver");
+            GameOver();
         }
     }
 
     public float GetPlayerHealth()
     {
         return health;
+    }
+
+    private void GameOver()
+    {
+        UIManager.Instance.LosePopUp();
+        Time.timeScale = 0f;
+    }
+
+    private void GameWin()
+    {
+        UIManager.Instance.WinPopUp();
+        Time.timeScale = 0f;
     }
 
 }
