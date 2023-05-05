@@ -152,6 +152,7 @@ public class WaveManager : SingletonComponent<WaveManager>
         // To remove coupling between Creep -> PlayerManager and Creep -> EconomyManager.
         creepController.CreepKilled += EconomyManager.Instance.AddCoin;
         creepController.CreepReachedBase += PlayerManager.Instance.ReduceHealth;
+        creepController.CreepReturnToPool += AddCreepToPool;
 
         creepController.Init(creepData, Base.transform.position);
 

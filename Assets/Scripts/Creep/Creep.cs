@@ -8,7 +8,6 @@ public class Creep : MonoBehaviour
     public CreepData data { get; private set; }
     float health;
     float speed;
-    int coins;
 
     private Vector3 targetPosition;
     private bool isMoveToWaypointCoroutineRunning = false;
@@ -17,10 +16,12 @@ public class Creep : MonoBehaviour
     // Delegate types
     public delegate void CreepKilledHandler(Creep creep);
     public delegate void CreepReachedBaseHandler(Creep creep);
+    public delegate void CreepReturnToPoolHandler(Creep creep);
 
     // Event fields
     public event CreepKilledHandler CreepKilled;
     public event CreepReachedBaseHandler CreepReachedBase;
+    public event CreepReturnToPoolHandler CreepReturnToPool;
 
     public virtual void Init(CreepData creepData, Vector3 basePosition)
     {
@@ -32,7 +33,6 @@ public class Creep : MonoBehaviour
         // Apply modifiers
         speed *= creepData.speedModifier;
         health *= creepData.healthModifier;
-        coins *= creepData.coinsModifier;
     }
 
     public virtual void TakeDamage(float damage)
@@ -62,8 +62,10 @@ public class Creep : MonoBehaviour
 
     protected virtual void ReturnCreepToPool()
     {
+        if (CreepReturnToPool != null)
+            CreepReturnToPool(this);
+
         isMoveToWaypointCoroutineRunning = false;
-        WaveManager.Instance.AddCreepToPool(this);
     }
 
     protected virtual void FixedUpdate()
