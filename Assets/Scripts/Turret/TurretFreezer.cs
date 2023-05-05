@@ -7,6 +7,16 @@ public class TurretFreezer : Turret
     private float fireCountdown = 0f;
     private float projectileSpeed = 50f;
 
+    protected override void OnTriggerEnter(Collider other)
+    {
+        base.OnTriggerEnter(other);
+    }
+
+    protected override void OnTriggerExit(Collider other)
+    {
+        base.OnTriggerExit(other);
+    }
+
     // By aiming slightly ahead of the target's movement, you can increase the chance of hitting it,
     // especially if it's moving in a predictable pattern. TurretRegular and TurretFreezer apply this.
     public override void Shoot()

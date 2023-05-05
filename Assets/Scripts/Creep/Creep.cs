@@ -77,24 +77,6 @@ public class Creep : MonoBehaviour
         }
     }
 
-    protected virtual void OnTriggerEnter(Collider other)
-    {
-        Turret turret = other.gameObject.GetComponent<Turret>();
-        if (turret != null)
-        {
-            turret.OnCreepEnteredRange(this);
-        }
-    }
-
-    protected virtual void OnTriggerExit(Collider other)
-    {
-        Turret turret = other.gameObject.GetComponent<Turret>();
-        if (turret != null)
-        {
-            turret.OnCreepLeftRange(this);
-        }
-    }
-
     //All creeps move in the same way, in the case of each creep moving in a different way, just override this functions in each creep.
     //Coroutine instead of update since that can be expensive and inefficient, especially if you have a lot of creeps in your game.
     protected virtual IEnumerator MoveToWaypointCoroutine()

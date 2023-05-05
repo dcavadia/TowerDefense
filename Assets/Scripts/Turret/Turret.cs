@@ -27,24 +27,42 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
         SetColliderRange(turretData.range);
     }
 
-    public void Update()
-    {
-        if (state != null)
-            state.UpdateState();
-    }
-
     private void SetColliderRange(float range) 
     {
         SphereCollider sphereCollider = GetComponent<SphereCollider>();
         sphereCollider.radius = range;
     }
 
+    protected virtual void OnTriggerEnter(Collider other)
+    {
+        Creep creep = other.gameObject.GetComponent<Creep>();
+        if (creep != null)
+        {
+            OnCreepEnteredRange(creep);
+        }
+    }
+
+    protected virtual void OnTriggerExit(Collider other)
+    {
+        Creep creep = other.gameObject.GetComponent<Creep>();
+        if (creep != null)
+        {
+            OnCreepLeftRange(creep);
+        }
+    }
+
+    public abstract void Shoot();
+
+    public void Update()
+    {
+        if (state != null)
+            state.UpdateState();
+    }
+
     public void ChangeState(TurretState state)
     {
         this.state = state;
     }
-
-    public abstract void Shoot();
 
     public bool TargetInRange()
     {
@@ -54,7 +72,7 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
         return true;
     }
 
-    //TODO: Move to a separate class responsible for managing the queue, so that the Turret class does not need to handle queue management. 
+    //TODO: Maybe move to a separate class responsible for managing the queue, so that the Turret class does not need to handle queue management?. 
     public void OnCreepEnteredRange(Creep creep)
     {
         if (creepsInRangeQueue.Contains(creep))
@@ -73,21 +91,21 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
         }
         
     }
-
     public void OnCreepLeftRange(Creep creep)
     {
         RemoveTrackOfCreep(creep);
     }
 
+
     private void OnCreepKilled(Creep creep)
     {
         RemoveTrackOfCreep(creep);
     }
-
     private void OnCreepReachedBase(Creep creep)
     {
         RemoveTrackOfCreep(creep);
     }
+
 
     private void RemoveTrackOfCreep(Creep creep)
     {
@@ -117,6 +135,7 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
         creep.CreepKilled -= OnCreepKilled;
         creep.CreepReachedBase -= OnCreepReachedBase;
     }
+
 }
 
 //The Turret script is using the Observer pattern, where it observes the Creep script's position in the game world. The Creep script is raising events when it enters or leaves the range of a turret.
