@@ -14,6 +14,12 @@ public class PlayerManager : SingletonComponent<PlayerManager>
     public void ReduceHealth(float amount)
     {
         health -= amount;
+        if (health <= 0)
+        {
+            // Player has lost the game
+            //GameManager.Instance.GameOver();
+            Debug.Log("GameOver");
+        }
     }
 
     public float GetPlayerHealth()

@@ -31,7 +31,7 @@ public class WaveManager : SingletonComponent<WaveManager>
     private Dictionary<Type, ObjectPool<Creep>> creepPools = new Dictionary<Type, ObjectPool<Creep>>();
 
 
-    // Start is called before the first frame update
+    // Start match
     void Start()
     {
         SetPlayerData();

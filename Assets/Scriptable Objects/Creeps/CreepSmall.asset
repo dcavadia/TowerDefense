@@ -16,6 +16,7 @@ MonoBehaviour:
   baseSpeed: 20
   baseHealth: 3
   baseCoins: 1
+  baseDamage: 1
   speedModifier: 1
   healthModifier: 1
   coinsModifier: 1

@@ -13,6 +13,7 @@ public class CreepData : ScriptableObject
     public float baseSpeed;
     public float baseHealth;
     public int baseCoins;
+    public int baseDamage;
 
     [Header("Modifiers")]
     public float speedModifier = 1f;

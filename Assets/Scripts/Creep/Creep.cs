@@ -45,11 +45,19 @@ public class Creep : MonoBehaviour
 
     protected virtual void ReachedBase()
     {
+        if (CreepReachedBase != null)
+            CreepReachedBase(this);
+
+        PlayerManager.Instance.ReduceHealth(data.baseDamage);
+
         ReturnCreepToPool();
     }
 
     protected virtual void Die()
     {
+        if (CreepKilled != null)
+            CreepKilled(this);
+
         EconomyManager.Instance.AddCoin(data.baseCoins);
 
         ReturnCreepToPool();
@@ -57,12 +65,6 @@ public class Creep : MonoBehaviour
 
     protected virtual void ReturnCreepToPool()
     {
-        if (CreepKilled != null)
-            CreepKilled(this);
-
-        if (CreepReachedBase != null)
-            CreepReachedBase(this);
-
         isMoveToWaypointCoroutineRunning = false;
         WaveManager.Instance.AddCreepToPool(this);
     }

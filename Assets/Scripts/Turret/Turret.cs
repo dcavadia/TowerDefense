@@ -61,6 +61,7 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
             return;
 
         creep.CreepKilled += OnCreepKilled;
+        creep.CreepReachedBase += OnCreepReachedBase;
 
         if (state is IdleState && creep != null)
         {
@@ -79,6 +80,11 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
     }
 
     private void OnCreepKilled(Creep creep)
+    {
+        RemoveTrackOfCreep(creep);
+    }
+
+    private void OnCreepReachedBase(Creep creep)
     {
         RemoveTrackOfCreep(creep);
     }
@@ -109,6 +115,7 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
                 creepsInRangeQueue = new Queue<Creep>(creepsInRangeQueue.Where(x => x != creep));
         }
         creep.CreepKilled -= OnCreepKilled;
+        creep.CreepReachedBase -= OnCreepReachedBase;
     }
 }
 
