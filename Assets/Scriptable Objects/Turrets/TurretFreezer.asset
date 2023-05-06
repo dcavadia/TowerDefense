@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TurretFreezer
   m_EditorClassIdentifier: 
   prefab: {fileID: 3312728997542272041, guid: 2db840306d61e4e1d8ed7a2a17e59dc5, type: 3}
-  projectile: {fileID: 6247370012072812066, guid: e0286330f5eeafb48ba3bb49042e7a8d,
+  projectile: {fileID: 6247370012072812066, guid: 6e08fdb952f5d8a4e84c185aed05b222,
     type: 3}
   cost: 2
   range: 10

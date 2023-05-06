@@ -45,6 +45,12 @@ public class Creep : MonoBehaviour
         }
     }
 
+    public virtual void ReduceSpeed(float percentage, float duration)
+    {
+        if(gameObject.activeSelf)
+            StartCoroutine(ReduceSpeedCoroutine(percentage, duration));
+    }
+
     protected virtual void ReachedBase()
     {
         if (CreepReachedBase != null)
@@ -92,5 +98,16 @@ public class Creep : MonoBehaviour
                 yield break; // exit coroutine
             }
         }
+    }
+
+    protected virtual IEnumerator ReduceSpeedCoroutine(float percentage, float duration)
+    {
+        float amountReduced = speed * percentage;
+
+        speed -= amountReduced;
+
+        yield return new WaitForSeconds(duration);
+
+        speed += amountReduced;
     }
 }

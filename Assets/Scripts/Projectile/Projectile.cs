@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Separate the turret logic from the projectile logic, allowing for easy extension and customization.
 public class Projectile : MonoBehaviour
 {
     private float damage;
@@ -11,7 +12,12 @@ public class Projectile : MonoBehaviour
         this.damage = damage;
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected virtual void ApplyEffect(Creep target)
+    {
+        // Default implementation
+    }
+
+    protected virtual void OnTriggerEnter(Collider other)
     {
         Creep creep = other.gameObject.GetComponent<Creep>();
         if (creep != null)
