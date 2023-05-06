@@ -26,13 +26,13 @@ public class Creep : MonoBehaviour
     public virtual void Init(CreepData creepData, Vector3 basePosition)
     {
         data = creepData;
-        health = creepData.baseHealth;
-        speed = creepData.baseSpeed;
+        health = creepData.Health;
+        speed = creepData.Speed;
         targetPosition = basePosition;
 
         // Apply modifiers
-        speed *= creepData.speedModifier;
-        health *= creepData.healthModifier;
+        speed *= creepData.SpeedModifier;
+        health *= creepData.HealthModifier;
         isMoveToWaypointCoroutineRunning = false;
     }
 

@@ -24,13 +24,13 @@ public class TurretPlacementManager : SingletonComponent<TurretPlacementManager>
 
     public void SelectTurret(TurretData turretData)
     {
-        if (!EconomyManager.Instance.CanAffordTurret(turretData.cost))
+        if (!EconomyManager.Instance.CanAffordTurret(turretData.Cost))
             return;
 
         isPlacingTurret = true;
 
         // Create the ghost turret object
-        turretGhost = Instantiate(turretData.prefab);
+        turretGhost = Instantiate(turretData.Prefab);
 
         selectedTurretData = turretData;
         selectedTurretType = turretGhost.GetComponent<Turret>();
@@ -54,12 +54,12 @@ public class TurretPlacementManager : SingletonComponent<TurretPlacementManager>
                 if (Physics.Raycast(ray, out RaycastHit placementHit, Mathf.Infinity, placementLayerMask))
                 {
                     //Purchase
-                    EconomyManager.Instance.PurchaseTurret(selectedTurretData.cost);
+                    EconomyManager.Instance.PurchaseTurret(selectedTurretData.Cost);
 
                     // Create a new turret at the clicked location
                     Vector3 turretPosition = new Vector3(placementHit.point.x, 0f, placementHit.point.z);
                     Creep target = null; // set the target to null, since there's no enemy at the moment
-                    float range = selectedTurretData.range;
+                    float range = selectedTurretData.Range;
 
                     // Get the correct factory for the selected turret type and create the turret
                     TurretFactory factory = turretFactories[selectedTurretType.GetType()];
@@ -83,7 +83,7 @@ public class TurretPlacementManager : SingletonComponent<TurretPlacementManager>
         {
             // Draw a wire disc with the range of the ghost turret
             Handles.color = new Color(1f, 0f, 0f, 1f);
-            Handles.DrawWireDisc(turretGhost.transform.position, Vector3.up, selectedTurretData.range);
+            Handles.DrawWireDisc(turretGhost.transform.position, Vector3.up, selectedTurretData.Range);
         }
     }
 }

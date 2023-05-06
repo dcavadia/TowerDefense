@@ -84,7 +84,7 @@ public class WaveManager : SingletonComponent<WaveManager>
 
     private void StartNextWave()
     {
-        if (currentWave >= LevelData.waves.Count)
+        if (currentWave >= LevelData.Waves.Count)
         {
             Debug.Log("All waves complete!");
             if (LastWaveCleared != null)
@@ -94,7 +94,7 @@ public class WaveManager : SingletonComponent<WaveManager>
             return;
         }
 
-        WaveData waveData = LevelData.waves[currentWave];
+        WaveData waveData = LevelData.Waves[currentWave];
 
         StartCoroutine(SpawnWave(waveData));
 
@@ -103,20 +103,20 @@ public class WaveManager : SingletonComponent<WaveManager>
 
     private IEnumerator SpawnWave(WaveData waveData)
     {
-        yield return new WaitForSeconds(waveData.waveDelay);
+        yield return new WaitForSeconds(waveData.WaveDelay);
 
-        creepsRemainingInWave = waveData.creepDataArray.Length;
+        creepsRemainingInWave = waveData.CreepDataArray.Length;
 
-        for (int i = 0; i < waveData.creepDataArray.Length; i++)
+        for (int i = 0; i < waveData.CreepDataArray.Length; i++)
         {
-            CreepData creepData = waveData.creepDataArray[i].creepData;
+            CreepData creepData = waveData.CreepDataArray[i].CreepData;
 
-            SpawnPointData spawnPoint = SpawnPoints.Find(spawn => spawn.spawnPointId == waveData.creepDataArray[i].spawnPointId);
+            SpawnPointData spawnPoint = SpawnPoints.Find(spawn => spawn.spawnPointId == waveData.CreepDataArray[i].SpawnPointId);
             Creep creepController = SpawnCreep(creepData, spawnPoint);
 
             creepsRemainingInWave--;
 
-            yield return new WaitForSeconds(waveData.timeBetweenCreeps);
+            yield return new WaitForSeconds(waveData.TimeBetweenCreeps);
         }
 
         isWaveActive = true;
@@ -126,7 +126,7 @@ public class WaveManager : SingletonComponent<WaveManager>
     private Creep SpawnCreep(CreepData creepData, SpawnPointData spawnPoint)
     {
         ObjectPool<Creep> pool;
-        Component component = creepData.prefab.GetComponent<Creep>();
+        Component component = creepData.Prefab.GetComponent<Creep>();
         Type type = component.GetType();
 
         if (!creepPools.TryGetValue(type, out pool))
@@ -138,7 +138,7 @@ public class WaveManager : SingletonComponent<WaveManager>
         Creep creepController = pool.GetObjectFromPool();
         if(creepController == null)
         {
-            GameObject newCreep = Instantiate(creepData.prefab, spawnPoint.position.transform.position, Quaternion.identity);
+            GameObject newCreep = Instantiate(creepData.Prefab, spawnPoint.position.transform.position, Quaternion.identity);
             creepController = newCreep.GetComponent<Creep>();
         }
         else

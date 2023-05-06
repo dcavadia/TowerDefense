@@ -24,7 +24,7 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
         state = new IdleState(this);
         currentPosition = position;
         this.turretData = turretData;
-        SetColliderRange(turretData.range);
+        SetColliderRange(turretData.Range);
     }
 
     private void SetColliderRange(float range) 
@@ -91,6 +91,7 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
         }
         
     }
+
     public void OnCreepLeftRange(Creep creep)
     {
         RemoveTrackOfCreep(creep);

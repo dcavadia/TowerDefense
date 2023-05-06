@@ -13,13 +13,13 @@ public class PlayerManager : SingletonComponent<PlayerManager>
 
     public void SetInitialPlayerData(PlayerData player)
     {
-        health = player.startingHealth;
-        EconomyManager.Instance.SetInitialCoins(player.startingCoins);
+        health = player.StartingHealth;
+        EconomyManager.Instance.SetInitialCoins(player.StartingCoins);
     }
 
     public void ReduceHealth(Creep creep)
     {
-        health -= creep.data.baseDamage;
+        health -= creep.data.Damage;
         if (health <= 0)
         {
             GameOver();

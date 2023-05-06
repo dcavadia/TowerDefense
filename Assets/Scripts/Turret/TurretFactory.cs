@@ -14,7 +14,7 @@ public class TurretRegularFactory : TurretFactory
 {
     public override Turret CreateTurret(Vector3 position, Creep target, float range, TurretData turretData)
     {
-        GameObject turretGameObject = Object.Instantiate(turretData.prefab);
+        GameObject turretGameObject = Object.Instantiate(turretData.Prefab);
         turretGameObject.transform.position = position;
         var turret = turretGameObject.GetComponent<Turret>();
         turret.Initialize(position, target, range, turretData);
@@ -26,7 +26,7 @@ public class TurretFreezerFactory : TurretFactory
 {
     public override Turret CreateTurret(Vector3 position, Creep target, float range, TurretData turretData)
     {
-        GameObject turretGameObject = Object.Instantiate(turretData.prefab);
+        GameObject turretGameObject = Object.Instantiate(turretData.Prefab);
         turretGameObject.transform.position = position;
         var turret = turretGameObject.GetComponent<Turret>();
         turret.Initialize(position, target, range, turretData);

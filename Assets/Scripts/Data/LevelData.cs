@@ -6,5 +6,8 @@ using UnityEngine;
 public class LevelData : ScriptableObject
 {
     [Tooltip("First wave to start is Element 0")]
-    public List<WaveData> waves;
+    [SerializeField] private List<WaveData> waves;
+
+    //Public getters
+    public List<WaveData> Waves { get { return waves; } }
 }

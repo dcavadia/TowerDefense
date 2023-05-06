@@ -5,10 +5,18 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Turret", menuName = "Tower Defense/Create New Turret")]
 public class TurretData : ScriptableObject
 {
-    public GameObject prefab;
-    public GameObject projectile;
-    public float cost;
-    public float range;
-    public float fireRate;
-    public float damage;
+    [SerializeField] private GameObject prefab;
+    [SerializeField] private GameObject projectile;
+    [SerializeField] private float cost;
+    [SerializeField] private float range;
+    [SerializeField] private float fireRate;
+    [SerializeField] private float damage;
+
+    //Public getters
+    public GameObject Prefab { get { return prefab; } }
+    public GameObject Projectile { get { return projectile; } }
+    public float Cost { get { return cost; } }
+    public float Range { get { return range; } }
+    public float FireRate { get { return fireRate; } }
+    public float Damage { get { return damage; } }
 }

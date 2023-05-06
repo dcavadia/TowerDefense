@@ -36,14 +36,14 @@ public class TurretRegular : Turret
             Vector3 estimatedTargetPosition = target.transform.position + (target.GetComponent<Rigidbody>().velocity * timeToTarget);
 
             // Instantiate and shoot the projectile
-            GameObject projectile = Instantiate(turretData.projectile, transform.position, Quaternion.identity);
+            GameObject projectile = Instantiate(turretData.Projectile, new Vector3(transform.position.x, 1f, transform.position.z), Quaternion.identity);
             Projectile projectileScript = projectile.GetComponent<Projectile>();
-            projectileScript.SetDamage(turretData.damage);
+            projectileScript.SetDamage(turretData.Damage);
             Rigidbody rb = projectile.GetComponent<Rigidbody>();
 
             rb.velocity = (estimatedTargetPosition - transform.position).normalized * projectileSpeed;
 
-            fireCountdown = 1f / turretData.fireRate;
+            fireCountdown = 1f / turretData.FireRate;
         }
 
         fireCountdown -= Time.deltaTime;

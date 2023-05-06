@@ -7,16 +7,27 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Creep", menuName = "Tower Defense/Create New Creep")]
 public class CreepData : ScriptableObject
 {
-    public GameObject prefab;
+    [SerializeField] private GameObject prefab;
 
     [Header("Base Stats")]
-    public float baseSpeed;
-    public float baseHealth;
-    public int baseCoins;
-    public int baseDamage;
+    [SerializeField] private float speed;
+    [SerializeField] private float health;
+    [SerializeField] private int coinsReward;
+    [SerializeField] private int damage;
 
     [Header("Modifiers")]
-    public float speedModifier = 1f;
-    public float healthModifier = 1f;
-    public int coinsModifier = 1;
+    [SerializeField] private float speedModifier = 1f;
+    [SerializeField] private float healthModifier = 1f;
+    [SerializeField] private int coinsModifier = 1;
+
+    //Public getters for each variable
+    public GameObject Prefab { get { return prefab; } }
+    public float Speed { get { return speed; } }
+    public float Health { get { return health; } }
+    public int CoinsReward { get { return coinsReward; } }
+    public int Damage { get { return damage; } }
+
+    public float SpeedModifier { get { return speedModifier; } }
+    public float HealthModifier { get { return healthModifier; } }
+    public int CoinsModifier { get { return coinsModifier; } }
 }
