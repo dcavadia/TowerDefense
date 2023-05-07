@@ -36,7 +36,7 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
     protected virtual void OnTriggerEnter(Collider other)
     {
         Creep creep = other.gameObject.GetComponent<Creep>();
-        if (creep != null)
+        if (creep != null && turretData != null)
         {
             OnCreepEnteredRange(creep);
         }
@@ -45,7 +45,7 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
     protected virtual void OnTriggerExit(Collider other)
     {
         Creep creep = other.gameObject.GetComponent<Creep>();
-        if (creep != null)
+        if (creep != null && turretData != null)
         {
             OnCreepLeftRange(creep);
         }
@@ -78,10 +78,12 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
         if (creepsInRangeQueue.Contains(creep))
             return;
 
+        
+
         creep.CreepKilled += OnCreepKilled;
         creep.CreepReachedBase += OnCreepReachedBase;
 
-        if (state is IdleState && creep != null)
+        if (state is IdleState && creep != null && target == null)
         {
             target = creep;
         }

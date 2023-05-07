@@ -91,17 +91,28 @@ public class Creep : MonoBehaviour
     //Coroutine instead of update since that can be expensive and inefficient, especially if you have a lot of creeps in your game.
     protected virtual IEnumerator MoveToWaypointCoroutine()
     {
+        float distanceThreshold = 0.01f;
+
         while (true)
         {
-            yield return new WaitForSeconds(0.1f); // wait for 0.1 seconds
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+            float step = speed * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
 
-            if (transform.position == targetPosition)
+            Vector3 direction = targetPosition - transform.position;
+
+            if (direction != Vector3.zero)
+            {
+                transform.rotation = Quaternion.LookRotation(direction);
+            }
+
+            if (Vector3.Distance(transform.position, targetPosition) <= distanceThreshold)
             {
                 // Reached waypoint, get next waypoint
                 ReachedBase();
                 yield break; // exit coroutine
             }
+
+            yield return null;
         }
     }
 
