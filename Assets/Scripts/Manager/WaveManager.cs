@@ -22,7 +22,6 @@ public class WaveManager : SingletonComponent<WaveManager>
 
     private int currentWave = 0;
     private int creepsRemainingInWave = 0;
-    private bool isWaveActive = false;
 
     // List of all the types of Creep
     private List<Type> derivedTypes = new List<Type>();
@@ -38,20 +37,14 @@ public class WaveManager : SingletonComponent<WaveManager>
     {
         SetPlayerData();
         CreateObjectPools();
-        StartNextWave();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isWaveActive)
+        if (creepsRemainingInWave == 0)
         {
-            if (creepsRemainingInWave == 0)
-            {
-                isWaveActive = false;
-                StartNextWave();
-
-            }
+            StartNextWave();
         }
     }
 
@@ -86,15 +79,15 @@ public class WaveManager : SingletonComponent<WaveManager>
     {
         if (currentWave >= LevelData.Waves.Count)
         {
-            Debug.Log("All waves complete!");
+            //Debug.Log("All waves complete!");
             if (LastWaveCleared != null)
                 LastWaveCleared();
-
 
             return;
         }
 
         WaveData waveData = LevelData.Waves[currentWave];
+        creepsRemainingInWave = waveData.CreepDataArray.Length;
 
         StartCoroutine(SpawnWave(waveData));
 
@@ -105,8 +98,6 @@ public class WaveManager : SingletonComponent<WaveManager>
     {
         yield return new WaitForSeconds(waveData.WaveDelay);
 
-        creepsRemainingInWave = waveData.CreepDataArray.Length;
-
         for (int i = 0; i < waveData.CreepDataArray.Length; i++)
         {
             CreepData creepData = waveData.CreepDataArray[i].CreepData;
@@ -114,12 +105,8 @@ public class WaveManager : SingletonComponent<WaveManager>
             SpawnPointData spawnPoint = SpawnPoints.Find(spawn => spawn.spawnPointId == waveData.CreepDataArray[i].SpawnPointId);
             Creep creepController = SpawnCreep(creepData, spawnPoint);
 
-            creepsRemainingInWave--;
-
             yield return new WaitForSeconds(waveData.TimeBetweenCreeps);
         }
-
-        isWaveActive = true;
     }
 
     // Use object pooling to improve performance
@@ -157,10 +144,10 @@ public class WaveManager : SingletonComponent<WaveManager>
         return creepController;
     }
 
-    // Add creeps to the object pool when they are destroyed
-    public void AddCreepToPool(Creep creepController)
+    // Add creeps to the object pool when they are destroyed (killed or reached base)
+    public void AddCreepToPool(Creep creep)
     {
-        Type type = creepController.GetType();
+        Type type = creep.GetType();
         ObjectPool<Creep> pool;
 
         if (!creepPools.TryGetValue(type, out pool))
@@ -169,7 +156,16 @@ public class WaveManager : SingletonComponent<WaveManager>
             return;
         }
 
-        pool.ReturnObjectToPool(creepController);
+        pool.ReturnObjectToPool(creep);
+        CreepDestroyed(creep);
+    }
+
+    private void CreepDestroyed(Creep creep)
+    {
+        creepsRemainingInWave--;
+        creep.CreepKilled -= EconomyManager.Instance.AddCoin;
+        creep.CreepReachedBase -= PlayerManager.Instance.ReduceHealth;
+        creep.CreepReturnToPool -= AddCreepToPool;
     }
 }
 

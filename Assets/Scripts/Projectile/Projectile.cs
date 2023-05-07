@@ -6,6 +6,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     private float damage;
+    private bool hasHitTarget = false;
 
     public void SetDamage(float damage)
     {
@@ -19,10 +20,14 @@ public class Projectile : MonoBehaviour
 
     protected virtual void OnTriggerEnter(Collider other)
     {
+        if (hasHitTarget)
+            return;
+
         Creep creep = other.gameObject.GetComponent<Creep>();
         if (creep != null)
         {
             creep.TakeDamage(damage);
+            hasHitTarget = true;
             Destroy(gameObject);
         }
     }

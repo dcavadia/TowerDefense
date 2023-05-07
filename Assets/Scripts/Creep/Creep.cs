@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.MemoryProfiler;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Creep : MonoBehaviour
 {
     public CreepData data { get; private set; }
     float health;
     float speed;
+
+    [SerializeField] private Image healthBarImage;
 
     private Vector3 targetPosition;
     private bool isMoveToWaypointCoroutineRunning = false;
@@ -34,11 +37,13 @@ public class Creep : MonoBehaviour
         speed *= creepData.SpeedModifier;
         health *= creepData.HealthModifier;
         isMoveToWaypointCoroutineRunning = false;
+        UpdateHealthBar();
     }
 
     public virtual void TakeDamage(float damage)
     {
         health -= damage;
+        UpdateHealthBar();
         if (health <= 0)
         {
             Die();
@@ -110,4 +115,17 @@ public class Creep : MonoBehaviour
 
         speed += amountReduced;
     }
+
+    private void UpdateHealthBar()
+    {
+        if (healthBarImage != null)
+        {
+            // Calculate the fill amount based on current health
+            float fillAmount = health / data.Health;
+
+            // Set the fill amount of the health bar image
+            healthBarImage.fillAmount = fillAmount;
+        }
+    }
+
 }

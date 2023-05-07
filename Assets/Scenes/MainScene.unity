@@ -1507,7 +1507,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1141845966
 GameObject:
@@ -1744,7 +1744,7 @@ PrefabInstance:
     - target: {fileID: 863164606739977221, guid: 458d7fbe6b08d464f9bbc0ea868876a4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 863164606739977221, guid: 458d7fbe6b08d464f9bbc0ea868876a4,
         type: 3}
@@ -2000,7 +2000,6 @@ MonoBehaviour:
   placementLayerMask:
     serializedVersion: 2
     m_Bits: 1
-  topDownCamera: {fileID: 896869053}
 --- !u!4 &1531456132
 Transform:
   m_ObjectHideFlags: 0
@@ -2670,6 +2669,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d3e964e09c12cb4e895fdf436017560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  topDownCamera: {fileID: 896869053}
   turretSelectionPanel: {fileID: 1617863426}
   playerInfoPanel: {fileID: 260050848}
   gameOverPanel: {fileID: 610857672}

@@ -7,7 +7,6 @@ using UnityEngine;
 public class TurretPlacementManager : SingletonComponent<TurretPlacementManager>
 {
     [SerializeField] private LayerMask placementLayerMask;
-    [SerializeField] private Camera topDownCamera;
 
     private GameObject turretGhost;
     private Turret selectedTurretType;
@@ -41,7 +40,7 @@ public class TurretPlacementManager : SingletonComponent<TurretPlacementManager>
         if (isPlacingTurret)
         {
             // Cast a ray from the top-down camera to determine the position of the ghost turret
-            Ray ray = topDownCamera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = UIManager.Instance.topDownCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, placementLayerMask))
             {
                 // Move the ghost turret to the position of the raycast hit

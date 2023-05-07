@@ -24,7 +24,7 @@ public class PlayerManager : SingletonComponent<PlayerManager>
         {
             GameOver();
         }
-        creep.CreepReachedBase -= ReduceHealth;
+        //creep.CreepReachedBase -= ReduceHealth;
     }
 
     public float GetPlayerHealth()

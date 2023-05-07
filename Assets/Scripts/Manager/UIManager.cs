@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class UIManager : SingletonComponent <UIManager>
 {
+    public Camera topDownCamera;
     public TurretSelectionPanel turretSelectionPanel;
     public PlayerInfoPanel playerInfoPanel;
     public GameOverPanel gameOverPanel;
