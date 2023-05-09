@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TreeEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(SphereCollider))]
@@ -84,20 +85,29 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
         // Add the creep to the spatial hash grid
         creepsInRange.Add(creep);
 
-        if (state is IdleState && target == null)
+        try
         {
-            target = creep;
-        }
-        else if (creep != target)
-        {//This should be the case when placing a turret with numerous creeps already under its range so unity manage their triggers randomly
-            float distanceToCreep = Vector3.Distance(transform.position, creep.transform.position);
-            float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
-
-            if (distanceToCreep < distanceToTarget)
+            if (state is IdleState && target == null)
             {
-                // New creep is closer, update the target
                 target = creep;
             }
+            else if (creep != target)
+            {//This should be the case when placing a turret with numerous creeps already under its range so unity manage their triggers randomly
+                float distanceToCreep = Vector3.Distance(transform.position, creep.transform.position);
+                float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+
+                if (distanceToCreep < distanceToTarget)
+                {
+                    // New creep is closer, update the target
+                    target = creep;
+                }
+            }
+        }
+        catch (NullReferenceException e)
+        {
+            // Handle the null reference exception here
+            // You can log an error, handle the situation, or take any other appropriate action
+            Debug.LogError("Null reference exception: " + e.Message);
         }
     }
 
@@ -136,6 +146,33 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
             return;
 
         target = WaveManager.Instance.SpatialHashGrid.GetNearestCreep(transform.position, range);
+    }
+
+    protected Projectile SpawnProjectile()
+    {
+        ObjectPool<Projectile> pool;
+        Component component = turretData.Projectile.GetComponent<Projectile>();
+        Type type = component.GetType();
+
+        if (!ObjectPoolManager.Instance.ProjectilePools.TryGetValue(type, out pool))
+        {
+            Debug.LogErrorFormat("No object pool found for type {0}", type);
+            return null;
+        }
+
+        Projectile projectile = pool.GetObjectFromPool();
+        if (projectile == null)
+        {
+            GameObject newProjectile = Instantiate(turretData.Projectile, new Vector3(transform.position.x, 1f, transform.position.z), Quaternion.identity);
+            projectile = newProjectile.GetComponent<Projectile>();
+        }
+        else
+        {
+            projectile.transform.position = new Vector3(transform.position.x, 1f, transform.position.z);
+            projectile.gameObject.SetActive(true);
+        }
+
+        return projectile;
     }
 
 }

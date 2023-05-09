@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: PlayerTutorial
   m_EditorClassIdentifier: 
   startingHealth: 30
-  startingCoins: 10
+  startingCoins: 20

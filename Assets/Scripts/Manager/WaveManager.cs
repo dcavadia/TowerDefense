@@ -23,12 +23,6 @@ public class WaveManager : SingletonComponent<WaveManager>
     private int currentWave = 0;
     private int creepsRemainingInWave = 0;
 
-    // List of all the types of Creep
-    private List<Type> derivedTypes = new List<Type>();
-
-    // Dictionary to store the object pools as reflections
-    private Dictionary<Type, ObjectPool<Creep>> creepPools = new Dictionary<Type, ObjectPool<Creep>>();
-
     public delegate void LastWaveClearedHandler();
     public event LastWaveClearedHandler LastWaveCleared;
 
@@ -41,7 +35,6 @@ public class WaveManager : SingletonComponent<WaveManager>
         SpatialHashGrid = new SpatialHashGrid(1f);
 
         SetPlayerData();
-        CreateObjectPools();
     }
 
     // Update is called once per frame
@@ -57,28 +50,7 @@ public class WaveManager : SingletonComponent<WaveManager>
     {
         PlayerManager.Instance.SetInitialPlayerData(PlayerData); 
     }
-    
-    private void CreateObjectPools()
-    {
-        // Get all the types that derive from Creep
-        foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-        {
-            foreach (Type type in assembly.GetTypes())
-            {
-                if (type.IsSubclassOf(typeof(Creep)))
-                {
-                    derivedTypes.Add(type);
-                }
-            }
-        }
-
-        // Create object pools for each type of Creep
-        foreach (Type type in derivedTypes)
-        {
-            ObjectPool<Creep> pool = new ObjectPool<Creep>();
-            creepPools[type] = pool;
-        }
-    }
+   
 
     private void StartNextWave()
     {
@@ -124,7 +96,7 @@ public class WaveManager : SingletonComponent<WaveManager>
         Component component = creepData.Prefab.GetComponent<Creep>();
         Type type = component.GetType();
 
-        if (!creepPools.TryGetValue(type, out pool))
+        if (!ObjectPoolManager.Instance.CreepPools.TryGetValue(type, out pool))
         {
             Debug.LogErrorFormat("No object pool found for type {0}", type);
             return null;
@@ -158,7 +130,7 @@ public class WaveManager : SingletonComponent<WaveManager>
         Type type = creep.GetType();
         ObjectPool<Creep> pool;
 
-        if (!creepPools.TryGetValue(type, out pool))
+        if (!ObjectPoolManager.Instance.CreepPools.TryGetValue(type, out pool))
         {
             Debug.LogErrorFormat("No object pool found for type {0}", type);
             return;
