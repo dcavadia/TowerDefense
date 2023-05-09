@@ -46,8 +46,6 @@ public class TurretRegular : Turret
             rb.velocity = (estimatedTargetPosition - transform.position).normalized * projectileSpeed;
 
             fireCountdown = 1f / turretData.FireRate;
-
-            //base.CheckNearestTarget();
         }
 
         fireCountdown -= Time.deltaTime;

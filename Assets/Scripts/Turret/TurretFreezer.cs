@@ -26,6 +26,8 @@ public class TurretFreezer : Turret
 
         if (fireCountdown <= 0f)
         {
+            base.CheckNearestTarget();
+
             // Calculate the distance between the turret and the target
             float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
 
