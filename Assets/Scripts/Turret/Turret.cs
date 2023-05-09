@@ -135,7 +135,7 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
         if (creepsInRange.Count <= 0)
             return;
 
-        target = WaveManager.Instance.SpatialHashGrid.GetNearestCreep(transform.position);
+        target = WaveManager.Instance.SpatialHashGrid.GetNearestCreep(transform.position, range);
     }
 
 }

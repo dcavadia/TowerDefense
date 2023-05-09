@@ -37,20 +37,23 @@ public class SpatialHashGrid
         }
     }
 
-    public Creep GetNearestCreep(Vector3 turretPosition)
+    public Creep GetNearestCreep(Vector3 turretPosition, float range)
     {
         Creep nearestCreep = null;
         float nearestDistance = float.MaxValue;
 
-        foreach (var cellCreeps in cells.Values)
+        foreach (var cell in GetAdjacentCells(turretPosition, range))
         {
-            foreach (var creep in cellCreeps)
+            if (cells.TryGetValue(cell, out List<Creep> cellCreeps))
             {
-                float distance = Vector3.Distance(turretPosition, creep.transform.position);
-                if (distance < nearestDistance)
+                foreach (var creep in cellCreeps)
                 {
-                    nearestCreep = creep;
-                    nearestDistance = distance;
+                    float distance = Vector3.Distance(turretPosition, creep.transform.position);
+                    if (distance < nearestDistance)
+                    {
+                        nearestCreep = creep;
+                        nearestDistance = distance;
+                    }
                 }
             }
         }
@@ -63,5 +66,22 @@ public class SpatialHashGrid
         int x = Mathf.FloorToInt(position.x / cellSize);
         int y = Mathf.FloorToInt(position.y / cellSize);
         return new Vector2Int(x, y);
+    }
+
+    // Provide adjacent cells query
+    private IEnumerable<Vector2Int> GetAdjacentCells(Vector3 position, float range)
+    {
+        int minX = Mathf.FloorToInt((position.x - range) / cellSize);
+        int maxX = Mathf.FloorToInt((position.x + range) / cellSize);
+        int minY = Mathf.FloorToInt((position.y - range) / cellSize);
+        int maxY = Mathf.FloorToInt((position.y + range) / cellSize);
+
+        for (int x = minX; x <= maxX; x++)
+        {
+            for (int y = minY; y <= maxY; y++)
+            {
+                yield return new Vector2Int(x, y);
+            }
+        }
     }
 }

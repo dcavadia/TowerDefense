@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0485f2eebf1e1a14993e5b12d1637f65, type: 3}
   m_Name: PlayerTutorial
   m_EditorClassIdentifier: 
-  startingHealth: 6
+  startingHealth: 30
   startingCoins: 10
