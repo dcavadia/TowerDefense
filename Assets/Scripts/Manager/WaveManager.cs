@@ -32,9 +32,14 @@ public class WaveManager : SingletonComponent<WaveManager>
     public delegate void LastWaveClearedHandler();
     public event LastWaveClearedHandler LastWaveCleared;
 
+    public SpatialHashGrid SpatialHashGrid { get; private set; }
+
     // Start match
     void Start()
     {
+        // Initialize the shared SpatialHashGrid
+        SpatialHashGrid = new SpatialHashGrid(1f);
+
         SetPlayerData();
         CreateObjectPools();
     }
@@ -105,6 +110,9 @@ public class WaveManager : SingletonComponent<WaveManager>
             SpawnPointData spawnPoint = SpawnPoints.Find(spawn => spawn.spawnPointId == waveData.CreepDataArray[i].SpawnPointId);
             Creep creepController = SpawnCreep(creepData, spawnPoint);
 
+            // Register the creep in the spatial hash grid
+            SpatialHashGrid.AddCreep(creepController);
+
             yield return new WaitForSeconds(waveData.TimeBetweenCreeps);
         }
     }
@@ -158,6 +166,8 @@ public class WaveManager : SingletonComponent<WaveManager>
 
         pool.ReturnObjectToPool(creep);
         CreepDestroyed(creep);
+        // Remove the creep from the spatial hash grid
+        SpatialHashGrid.RemoveCreep(creep);
     }
 
     private void CreepDestroyed(Creep creep)

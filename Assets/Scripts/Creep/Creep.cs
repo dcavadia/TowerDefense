@@ -96,7 +96,11 @@ public class Creep : MonoBehaviour
         while (true)
         {
             float step = speed * Time.deltaTime;
+
+            //Update position in Spatial Hash Grid
+            WaveManager.Instance.SpatialHashGrid.RemoveCreep(this);
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
+            WaveManager.Instance.SpatialHashGrid.AddCreep(this);
 
             Vector3 direction = targetPosition - transform.position;
 

@@ -13,9 +13,7 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
     protected TurretState state;
     protected Vector3 currentPosition;
     protected TurretData turretData;
-
-    //Each turret have its own queue of targets.
-    private Queue<Creep> creepsInRangeQueue = new Queue<Creep>();
+    protected List<Creep> creepsInRange;
 
     public void Initialize(Vector3 position, Creep target, float range, TurretData turretData)
     {
@@ -24,6 +22,8 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
         state = new IdleState(this);
         currentPosition = position;
         this.turretData = turretData;
+        creepsInRange = new List<Creep>();
+
         SetColliderRange(turretData.Range);
     }
 
@@ -75,23 +75,30 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
     //TODO: Maybe move to a separate class responsible for managing the queue, so that the Turret class does not need to handle queue management?. 
     public void OnCreepEnteredRange(Creep creep)
     {
-        if (creepsInRangeQueue.Contains(creep))
+        if (creep == null || turretData == null || creepsInRange.Contains(creep))
             return;
-
-        
 
         creep.CreepKilled += OnCreepKilled;
         creep.CreepReachedBase += OnCreepReachedBase;
 
-        if (state is IdleState && creep != null && target == null)
+        // Add the creep to the spatial hash grid
+        creepsInRange.Add(creep);
+
+        if (state is IdleState && target == null)
         {
             target = creep;
         }
-        else if(creep != target)//Is already attacking
-        {
-            creepsInRangeQueue.Enqueue(creep);
+        else if (creep != target)
+        {//This should be the case when placing a turret with numerous creeps already under its range so unity manage their triggers randomly
+            float distanceToCreep = Vector3.Distance(transform.position, creep.transform.position);
+            float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+
+            if (distanceToCreep < distanceToTarget)
+            {
+                // New creep is closer, update the target
+                target = creep;
+            }
         }
-        
     }
 
     public void OnCreepLeftRange(Creep creep)
@@ -99,11 +106,11 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
         RemoveTrackOfCreep(creep);
     }
 
-
     private void OnCreepKilled(Creep creep)
     {
         RemoveTrackOfCreep(creep);
     }
+
     private void OnCreepReachedBase(Creep creep)
     {
         RemoveTrackOfCreep(creep);
@@ -112,31 +119,23 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
 
     private void RemoveTrackOfCreep(Creep creep)
     {
-        if (state is AttackState && creep != null && creep == target)
-        {
-            if (creepsInRangeQueue.Count > 0)
-            {
-                target = creepsInRangeQueue.Dequeue();
+        if (creep == null || !creepsInRange.Contains(creep))
+            return;
 
-                //Remove creep from queue
-                if (creepsInRangeQueue.Contains(creep))
-                    creepsInRangeQueue = new Queue<Creep>(creepsInRangeQueue.Where(x => x != creep));
-                //TODO: Consider HashSet instead of queue?
-            }
-            else
-            {
-                target = null;
-                state = new IdleState(this);
-            }
-        }
-        else if (state is AttackState && creep != null && creep != target)
-        {
-            //Remove creep from queue
-            if (creepsInRangeQueue.Contains(creep))
-                creepsInRangeQueue = new Queue<Creep>(creepsInRangeQueue.Where(x => x != creep));
-        }
         creep.CreepKilled -= OnCreepKilled;
         creep.CreepReachedBase -= OnCreepReachedBase;
+
+        creepsInRange.Remove(creep);
+        if (creepsInRange.Count <= 0)
+            target = null;
+    }
+
+    protected void CheckNearestTarget()
+    {
+        if (creepsInRange.Count <= 0)
+            return;
+
+        target = WaveManager.Instance.SpatialHashGrid.GetNearestCreep(transform.position);
     }
 
 }
