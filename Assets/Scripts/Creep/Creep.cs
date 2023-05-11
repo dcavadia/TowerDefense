@@ -108,7 +108,7 @@ public abstract class Creep : MonoBehaviour
 
         yield return new WaitForSeconds(duration);
 
-        speed = amountReduced;
+        speed += amountReduced;
     }
 
 

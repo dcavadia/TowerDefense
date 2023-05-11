@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21edfb69ef9988b4294f4903baeb9453, type: 3}
   m_Name: CreepSmall
   m_EditorClassIdentifier: 
-  prefab: {fileID: 6062474898863262898, guid: cc1690cde1bfb49158f54df1062eaf1a, type: 3}
+  health: 20
   speed: 1
-  health: 50
   coinsReward: 1
   damage: 1
+  prefab: {fileID: 6062474898863262898, guid: cc1690cde1bfb49158f54df1062eaf1a, type: 3}

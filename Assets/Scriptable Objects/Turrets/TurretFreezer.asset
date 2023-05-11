@@ -15,5 +15,5 @@ MonoBehaviour:
   prefab: {fileID: 3312728997542272041, guid: 2db840306d61e4e1d8ed7a2a17e59dc5, type: 3}
   projectile: {fileID: 11400000, guid: 2e2a823834f54f84f86c09c7d2de735e, type: 2}
   cost: 2
-  range: 10
-  fireRate: 10
+  range: 7
+  fireRate: 0.5
