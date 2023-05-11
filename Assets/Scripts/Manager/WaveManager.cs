@@ -95,6 +95,12 @@ public class WaveManager : SingletonComponent<WaveManager>
             return null;
         }
 
+        if(spawnPoint == null)
+        {
+            Debug.LogErrorFormat("No Spawn Point found, please fix the ID in the Wave Data");
+            return null;
+        }
+
         Creep creepController = pool.GetObjectFromPool();
         if(creepController == null)
         {

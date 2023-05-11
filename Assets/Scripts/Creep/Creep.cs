@@ -111,8 +111,7 @@ public abstract class Creep : MonoBehaviour
 
     protected virtual IEnumerator ReduceSpeedCoroutine(float percentage, float duration)
     {
-        float amountReduced = speed * percentage;
-
+        float amountReduced = data.Speed * percentage;
         speed -= amountReduced;
 
         yield return new WaitForSeconds(duration);
