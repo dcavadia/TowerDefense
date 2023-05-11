@@ -20,7 +20,7 @@ public abstract class Projectile : MonoBehaviour
         initialPosition = transform.position;
     }
 
-    protected virtual void Update()
+    protected virtual void FixedUpdate()
     {
         if (hasHitTarget)
             return;
@@ -34,6 +34,23 @@ public abstract class Projectile : MonoBehaviour
             ReturnToPool();
             hasHitTarget = false;
             Debug.Log("Missed shot");
+            return;
+        }
+
+        // Get the nearby creeps from the SpatialHashGrid
+        Creep nearestCreep = WaveManager.Instance.SpatialHashGrid.GetNearestCreep(transform.position, 1f);
+        if (nearestCreep != null)
+        {
+            float distanceToCreep = Vector3.Distance(transform.position, nearestCreep.transform.position);
+            if (distanceToCreep <= 2f)
+            {
+                nearestCreep.TakeDamage(damage);
+                ApplyEffect(nearestCreep);
+                hasHitTarget = true;
+                ReturnToPool();
+                hasHitTarget = false;
+                return;
+            }
         }
     }
 
@@ -43,21 +60,6 @@ public abstract class Projectile : MonoBehaviour
     }
 
     protected abstract void ApplyEffect(Creep target);
-
-    protected virtual void OnTriggerEnter(Collider other)
-    {
-        if (hasHitTarget)
-            return;
-
-        Creep creep = other.gameObject.GetComponent<Creep>();
-        if (creep != null)
-        {
-            creep.TakeDamage(damage);
-            hasHitTarget = true;
-            ReturnToPool();
-            hasHitTarget = false;
-        }
-    }
 
     private void ReturnToPool()
     {

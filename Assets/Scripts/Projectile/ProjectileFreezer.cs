@@ -9,17 +9,6 @@ public class ProjectileFreezer : Projectile
     // For 2 seconds
     public float freezerDuration = 2f;
 
-    protected override void OnTriggerEnter(Collider other)
-    {
-        Creep creep = other.gameObject.GetComponent<Creep>();
-        if (creep != null)
-        {
-            ApplyEffect(creep);
-            base.OnTriggerEnter(other);
-        }
-
-    }
-
     protected override void ApplyEffect(Creep target)
     {
         // Apply slow of speed

@@ -83,6 +83,9 @@ public abstract class Creep : MonoBehaviour
     protected virtual IEnumerator MoveToWaypointCoroutine()
     {
         float distanceThreshold = 0.01f;
+        WaitForFixedUpdate waitForFixedUpdate = new WaitForFixedUpdate();
+        Vector3 moveDirection = Vector3.zero;
+        Quaternion targetRotation = Quaternion.identity;
 
         while (true)
         {
@@ -92,11 +95,11 @@ public abstract class Creep : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
             WaveManager.Instance.SpatialHashGrid.AddCreep(this);
 
-            Vector3 direction = targetPosition - transform.position;
-
-            if (direction != Vector3.zero)
+            moveDirection = targetPosition - transform.position;
+            if (moveDirection != Vector3.zero)
             {
-                transform.rotation = Quaternion.LookRotation(direction);
+                targetRotation = Quaternion.LookRotation(moveDirection);
+                transform.rotation = targetRotation;
             }
 
             if (Vector3.Distance(transform.position, targetPosition) <= distanceThreshold)
@@ -105,18 +108,26 @@ public abstract class Creep : MonoBehaviour
                 yield break;
             }
 
-            yield return null;
+            // Instead of yield return null, this uses a pre-allocated YieldInstruction object reducing GC alloc.
+            yield return waitForFixedUpdate;
         }
     }
 
     protected virtual IEnumerator ReduceSpeedCoroutine(float percentage, float duration)
     {
         float amountReduced = data.Speed * percentage;
+
+        if (speed - amountReduced <= 0)
+        {
+            // Already frozen
+            yield break;
+        }
+
         speed -= amountReduced;
 
         yield return new WaitForSeconds(duration);
 
-        speed += amountReduced;
+        speed = amountReduced;
     }
 
     protected void UpdateHealthBar()

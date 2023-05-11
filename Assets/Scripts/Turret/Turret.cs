@@ -107,7 +107,6 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
         {
             // Handle the null reference exception here
             // You can log an error, handle the situation, or take any other appropriate action
-            Debug.LogError("Null reference exception: " + e.Message);
         }
     }
 
