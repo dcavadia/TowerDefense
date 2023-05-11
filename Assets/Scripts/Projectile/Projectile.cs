@@ -10,14 +10,9 @@ public abstract class Projectile : MonoBehaviour
 
     private Vector3 initialPosition;
 
-    protected virtual void Awake()
+    private void Awake()
     {
         TrackDistanceOfProjectile();
-    }
-
-    private void TrackDistanceOfProjectile()
-    {
-        initialPosition = transform.position;
     }
 
     protected virtual void FixedUpdate()
@@ -31,9 +26,9 @@ public abstract class Projectile : MonoBehaviour
         // Check if the projectile has exceeded the maximum distance threshold
         if (distanceTraveled > maxDistanceThreshold)
         {
+            //Ghost projectile!
             ReturnToPool();
             hasHitTarget = false;
-            Debug.Log("Missed shot");
             return;
         }
 
@@ -42,7 +37,7 @@ public abstract class Projectile : MonoBehaviour
         if (nearestCreep != null)
         {
             float distanceToCreep = Vector3.Distance(transform.position, nearestCreep.transform.position);
-            if (distanceToCreep <= 2f)
+            if (distanceToCreep <= 1.5f)
             {
                 nearestCreep.TakeDamage(damage);
                 ApplyEffect(nearestCreep);
@@ -54,12 +49,17 @@ public abstract class Projectile : MonoBehaviour
         }
     }
 
+    protected abstract void ApplyEffect(Creep target);
+
+    private void TrackDistanceOfProjectile()
+    {
+        initialPosition = transform.position;
+    }
+
     public void SetDamage(float damage)
     {
         this.damage = damage;
     }
-
-    protected abstract void ApplyEffect(Creep target);
 
     private void ReturnToPool()
     {

@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public abstract class Creep : MonoBehaviour
 {
     // Encapsulation promotes data integrity :)
-    protected CreepData data { get; private set; }
-    protected float health;
-    protected float speed;
+    private CreepData data;
+    private float health;
+    private float speed;
 
     private Vector3 targetPosition;
     private bool isMoveToWaypointCoroutineRunning = false;
@@ -23,9 +23,18 @@ public abstract class Creep : MonoBehaviour
     public event CreepReachedBaseHandler CreepReachedBase;
     public event CreepReturnToPoolHandler CreepReturnToPool;
 
-    [SerializeField] protected Image healthBarImage;
+    [SerializeField] private Image healthBarImage;
 
-    public virtual void Init(CreepData creepData, Vector3 basePosition)
+    private void FixedUpdate()
+    {
+        if (!isMoveToWaypointCoroutineRunning && gameObject.activeSelf)
+        {
+            StartCoroutine(MoveToWaypointCoroutine());
+            isMoveToWaypointCoroutineRunning = true;
+        }
+    }
+
+    public void Initialize(CreepData creepData, Vector3 basePosition)
     {
         data = creepData;
         health = creepData.Health;
@@ -46,38 +55,10 @@ public abstract class Creep : MonoBehaviour
         }
     }
 
-    public virtual void ReduceSpeed(float percentage, float duration)
+    public void ReduceSpeed(float percentage, float duration)
     {
         if (gameObject.activeSelf)
             StartCoroutine(ReduceSpeedCoroutine(percentage, duration));
-    }
-
-    protected virtual void ReachedBase()
-    {
-        CreepReachedBase?.Invoke(this);
-
-        ReturnCreepToPool();
-    }
-
-    protected virtual void Die()
-    {
-        CreepKilled?.Invoke(this);
-
-        ReturnCreepToPool();
-    }
-
-    protected virtual void ReturnCreepToPool()
-    {
-        CreepReturnToPool?.Invoke(this);
-    }
-
-    protected virtual void FixedUpdate()
-    {
-        if (!isMoveToWaypointCoroutineRunning && gameObject.activeSelf)
-        {
-            StartCoroutine(MoveToWaypointCoroutine());
-            isMoveToWaypointCoroutineRunning = true;
-        }
     }
 
     protected virtual IEnumerator MoveToWaypointCoroutine()
@@ -113,7 +94,7 @@ public abstract class Creep : MonoBehaviour
         }
     }
 
-    protected virtual IEnumerator ReduceSpeedCoroutine(float percentage, float duration)
+    private IEnumerator ReduceSpeedCoroutine(float percentage, float duration)
     {
         float amountReduced = data.Speed * percentage;
 
@@ -130,13 +111,31 @@ public abstract class Creep : MonoBehaviour
         speed = amountReduced;
     }
 
-    protected void UpdateHealthBar()
+
+    private void UpdateHealthBar()
     {
         if (healthBarImage != null)
         {
             float fillAmount = health / data.Health;
             healthBarImage.fillAmount = fillAmount;
         }
+    }
+
+    private void ReachedBase()
+    {
+        CreepReachedBase?.Invoke(this);
+        ReturnCreepToPool();
+    }
+
+    private void Die()
+    {
+        CreepKilled?.Invoke(this);
+        ReturnCreepToPool();
+    }
+
+    private void ReturnCreepToPool()
+    {
+        CreepReturnToPool?.Invoke(this);
     }
 
     public CreepData GetData()

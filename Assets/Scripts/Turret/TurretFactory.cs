@@ -7,42 +7,42 @@ using UnityEngine;
 //Provide more flexibility in creating related objects and more decoupling in comparision with an abstract class.
 public abstract class TurretFactory
 {
-    protected Turret CreateTurretInternal(Vector3 position, Creep target, float range, TurretData turretData)
+    protected Turret CreateTurretInternal(Vector3 position, TurretData turretData)
     {
         GameObject turretGameObject = Object.Instantiate(turretData.Prefab);
         turretGameObject.transform.position = position;
         var turret = turretGameObject.GetComponent<Turret>();
-        turret.Initialize(position, target, range, turretData);
+        turret.Initialize(turretData);
         return turret;
     }
 
-    public abstract Turret CreateTurret(Vector3 position, Creep target, float range, TurretData turretData);
+    public abstract Turret CreateTurret(Vector3 position, TurretData turretData);
 }
 
 public class TurretRegularFactory : TurretFactory
 {
-    public override Turret CreateTurret(Vector3 position, Creep target, float range, TurretData turretData)
+    public override Turret CreateTurret(Vector3 position, TurretData turretData)
     {
-        return CreateTurretInternal(position, target, range, turretData);
+        return CreateTurretInternal(position, turretData);
     }
 }
 
 public class TurretFreezerFactory : TurretFactory
 {
-    public override Turret CreateTurret(Vector3 position, Creep target, float range, TurretData turretData)
+    public override Turret CreateTurret(Vector3 position, TurretData turretData)
     {
-        return CreateTurretInternal(position, target, range, turretData);
+        return CreateTurretInternal(position, turretData);
     }
 }
 
 public class TurretFireFactory : TurretFactory
 {
-    public override Turret CreateTurret(Vector3 position, Creep target, float range, TurretData turretData)
+    public override Turret CreateTurret(Vector3 position, TurretData turretData)
     {
         GameObject turretGameObject = Object.Instantiate(turretData.Prefab);
         turretGameObject.transform.position = position;
         var turret = turretGameObject.GetComponent<Turret>();
-        turret.Initialize(position, target, range, turretData);
+        turret.Initialize(turretData);
         //Use some sfx?
         return turret;
     }

@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Level", menuName = "Tower Defense/Create New Level")]
 public class LevelData : ScriptableObject
 {
-    [Tooltip("First wave to start is Element 0")]
+    [Header("Wave starts from top to bottom\n")]
     [SerializeField] private List<WaveData> waves;
 
     //Public getters

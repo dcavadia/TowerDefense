@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,32 +7,20 @@ using TreeEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(SphereCollider))]
+[RequireComponent(typeof(Rigidbody))]
 //Abstract Factory, State and Observer patterns
 public abstract class Turret : MonoBehaviour, ITurretObserver
 {
-    protected Creep target;
-    protected float range;
-    protected TurretState state;
-    protected Vector3 currentPosition;
     protected TurretData turretData;
-    protected List<Creep> creepsInRange;
+    protected Creep target;
+    private TurretState state;
+    private HashSet<Creep> creepsInRange;
+    private SphereCollider sphereCollider;
 
-    public void Initialize(Vector3 position, Creep target, float range, TurretData turretData)
+    private void Update()
     {
-        this.target = target;
-        this.range = range;
-        state = new IdleState(this);
-        currentPosition = position;
-        this.turretData = turretData;
-        creepsInRange = new List<Creep>();
-
-        SetColliderRange(turretData.Range);
-    }
-
-    private void SetColliderRange(float range) 
-    {
-        SphereCollider sphereCollider = GetComponent<SphereCollider>();
-        sphereCollider.radius = range;
+        if (state != null)
+            state.UpdateState();
     }
 
     protected virtual void OnTriggerEnter(Collider other)
@@ -52,13 +41,23 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
         }
     }
 
-    public abstract void Shoot();
-
-    public void Update()
+    public void Initialize(TurretData turretData)
     {
-        if (state != null)
-            state.UpdateState();
+        this.turretData = turretData;
+        target = null;
+        state = new IdleState(this);
+        creepsInRange = new HashSet<Creep>();
+
+        SetColliderRange(turretData.Range);
     }
+
+    private void SetColliderRange(float range)
+    {
+        sphereCollider = GetComponent<SphereCollider>();
+        sphereCollider.radius = range;
+    }
+
+    public abstract void Shoot();
 
     public void ChangeState(TurretState state)
     {
@@ -67,13 +66,12 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
 
     public bool TargetInRange()
     {
-        if (!target) 
+        if (!target)
             return false;
 
         return true;
     }
 
-    //TODO: Maybe move to a separate class responsible for managing the queue, so that the Turret class does not need to handle queue management?. 
     public void OnCreepEnteredRange(Creep creep)
     {
         if (creep == null || turretData == null || creepsInRange.Contains(creep))
@@ -82,7 +80,7 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
         creep.CreepKilled += OnCreepKilled;
         creep.CreepReachedBase += OnCreepReachedBase;
 
-        // Add the creep to the spatial hash grid
+        // Start tracking creeps
         creepsInRange.Add(creep);
 
         try
@@ -92,7 +90,7 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
                 target = creep;
             }
             else if (creep != target)
-            {//This should be the case when placing a turret with numerous creeps already under its range so unity manage their triggers randomly
+            {//This should be the case when placing a turret with numerous creeps already under its range since unity manage their triggers randomly
                 float distanceToCreep = Vector3.Distance(transform.position, creep.transform.position);
                 float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
 
@@ -103,9 +101,8 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
                 }
             }
         }
-        catch (NullReferenceException e)
+        catch (NullReferenceException)
         {
-            // Handle the null reference exception here
             // You can log an error, handle the situation, or take any other appropriate action
         }
     }
@@ -125,7 +122,6 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
         RemoveTrackOfCreep(creep);
     }
 
-
     private void RemoveTrackOfCreep(Creep creep)
     {
         if (creep == null || !creepsInRange.Contains(creep))
@@ -144,7 +140,7 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
         if (creepsInRange.Count <= 0)
             return;
 
-        target = WaveManager.Instance.SpatialHashGrid.GetNearestCreep(transform.position, range);
+        target = WaveManager.Instance.SpatialHashGrid.GetNearestCreep(transform.position, turretData.Range);
     }
 
     protected Projectile SpawnProjectile()
@@ -160,15 +156,15 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
         }
 
         Projectile projectile = pool.GetObjectFromPool();
-        if (projectile == null)
-        {// Pool empty
-            GameObject newProjectile = Instantiate(turretData.Projectile.Prefab, new Vector3(transform.position.x, 1f, transform.position.z), Quaternion.identity);
-            projectile = newProjectile.GetComponent<Projectile>();
-        }
-        else
+        if (projectile != null)
         {
             projectile.transform.position = new Vector3(transform.position.x, 1f, transform.position.z);
             projectile.gameObject.SetActive(true);
+        }
+        else
+        {// Pool empty
+            GameObject newProjectile = Instantiate(turretData.Projectile.Prefab, new Vector3(transform.position.x, 1f, transform.position.z), Quaternion.identity);
+            projectile = newProjectile.GetComponent<Projectile>();
         }
 
         return projectile;
@@ -176,7 +172,6 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
 
 }
 
-//The Turret script is using the Observer pattern, where it observes the Creep script's position in the game world. The Creep script is raising events when it enters or leaves the range of a turret.
 //The Turret script implements the ITurretObserver interface, which defines two methods that get called when a Creep enters or leaves the range of the turret.
 //These methods allow the Turret script to react to changes in the Creep's position, which makes it the observer in this case.
 public interface ITurretObserver

@@ -118,7 +118,7 @@ public class WaveManager : SingletonComponent<WaveManager>
         creepController.CreepReachedBase += PlayerManager.Instance.ReduceHealth;
         creepController.CreepReturnToPool += AddCreepToPool;
 
-        creepController.Init(creepData, Base.transform.position);
+        creepController.Initialize(creepData, Base.transform.position);
 
         return creepController;
     }

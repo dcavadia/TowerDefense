@@ -6,6 +6,7 @@ using System.Reflection;
 using UnityEngine;
 
 //Uses reflection to dynamically find all the classes derived from the generic type T
+//Object Pooling pattern
 public class ObjectPool<T> where T : Component
 {
     //Using a queue data structure ensures that objects that have been in the pool the longest are returned first, which helps to avoid situations where objects

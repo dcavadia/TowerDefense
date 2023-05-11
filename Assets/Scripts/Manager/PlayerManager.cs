@@ -24,7 +24,6 @@ public class PlayerManager : SingletonComponent<PlayerManager>
         {
             GameOver();
         }
-        //creep.CreepReachedBase -= ReduceHealth;
     }
 
     public float GetPlayerHealth()
@@ -32,16 +31,27 @@ public class PlayerManager : SingletonComponent<PlayerManager>
         return health;
     }
 
+    // Consider adding events for these
     private void GameOver()
     {
         UIManager.Instance.LosePopUp();
-        Time.timeScale = 0f;
+        PauseGame();
     }
 
     private void GameWin()
     {
         UIManager.Instance.WinPopUp();
+        PauseGame();
+    }
+
+    public void PauseGame()
+    {
         Time.timeScale = 0f;
+    }
+
+    public void ResumeGame()
+    {
+        Time.timeScale = 1f;
     }
 
 }

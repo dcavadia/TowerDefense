@@ -16,4 +16,4 @@ MonoBehaviour:
   projectile: {fileID: 11400000, guid: 9ed04479863880f409af0f322ead1d16, type: 2}
   cost: 1
   range: 10
-  fireRate: 1
+  fireRate: 10

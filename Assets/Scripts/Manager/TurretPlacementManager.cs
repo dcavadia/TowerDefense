@@ -22,20 +22,6 @@ public class TurretPlacementManager : SingletonComponent<TurretPlacementManager>
         turretFactories.Add(typeof(TurretFire), new TurretFireFactory());
     }
 
-    public void SelectTurret(TurretData turretData)
-    {
-        if (!EconomyManager.Instance.CanAffordTurret(turretData.Cost))
-            return;
-
-        isPlacingTurret = true;
-
-        // Create the ghost turret object
-        turretGhost = Instantiate(turretData.Prefab);
-
-        selectedTurretData = turretData;
-        selectedTurretType = turretGhost.GetComponent<Turret>();
-    }
-
     private void Update()
     {
         if (isPlacingTurret)
@@ -53,17 +39,15 @@ public class TurretPlacementManager : SingletonComponent<TurretPlacementManager>
                 // Raycast to see if the turret can be placed at the clicked location
                 if (Physics.Raycast(ray, out RaycastHit placementHit, Mathf.Infinity, placementLayerMask))
                 {
-                    //Purchase
                     EconomyManager.Instance.PurchaseTurret(selectedTurretData.Cost);
 
                     // Create a new turret at the clicked location
                     Vector3 turretPosition = new Vector3(placementHit.point.x, 0f, placementHit.point.z);
-                    Creep target = null; // set the target to null, since there's no enemy at the moment
-                    float range = selectedTurretData.Range;
+
 
                     // Get the correct factory for the selected turret type and create the turret
                     TurretFactory factory = turretFactories[selectedTurretType.GetType()];
-                    Turret newTurret = factory.CreateTurret(turretPosition, target, range, selectedTurretData);
+                    Turret newTurret = factory.CreateTurret(turretPosition, selectedTurretData);
 
                     // Destroy the ghost turret object
                     Destroy(turretGhost);
@@ -75,6 +59,20 @@ public class TurretPlacementManager : SingletonComponent<TurretPlacementManager>
                 }
             }
         }
+    }
+
+    public void SelectTurret(TurretData turretData)
+    {
+        if (!EconomyManager.Instance.CanAffordTurret(turretData.Cost))
+            return;
+
+        isPlacingTurret = true;
+
+        // Create the ghost turret object
+        turretGhost = Instantiate(turretData.Prefab);
+
+        selectedTurretData = turretData;
+        selectedTurretType = turretGhost.GetComponent<Turret>();
     }
 
     private void OnDrawGizmos()
