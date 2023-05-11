@@ -5,22 +5,26 @@ using UnityEngine;
 public class ProjectileFire : Projectile
 {
     // Apply 20% of the original damage
-    //public float scorchPercentage = 0.2f;
+    public float scorchPercentage = 0.2f;
     // During 2 seconds
-    //public float scorchDuration = 2f;
+    public float scorchDuration = 5f;
 
     protected override void OnTriggerEnter(Collider other)
     {
         Creep creep = other.gameObject.GetComponent<Creep>();
         if (creep != null)
         {
-            base.OnTriggerEnter(other);
+            // I want it to just apply the effect without the inital damage impact
             ApplyEffect(creep);
+            base.OnTriggerEnter(other);
         }
     }
 
     protected override void ApplyEffect(Creep target)
     {
         // Apply fire scorch effect to the target 
+
+        // Apply fire sfx
     }
+
 }

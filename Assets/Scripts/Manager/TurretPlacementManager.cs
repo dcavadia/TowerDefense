@@ -19,6 +19,7 @@ public class TurretPlacementManager : SingletonComponent<TurretPlacementManager>
     {
         turretFactories.Add(typeof(TurretRegular), new TurretRegularFactory());
         turretFactories.Add(typeof(TurretFreezer), new TurretFreezerFactory());
+        turretFactories.Add(typeof(TurretFire), new TurretFireFactory());
     }
 
     public void SelectTurret(TurretData turretData)

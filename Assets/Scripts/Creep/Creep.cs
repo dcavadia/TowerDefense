@@ -32,9 +32,6 @@ public abstract class Creep : MonoBehaviour
         speed = creepData.Speed;
         targetPosition = basePosition;
 
-        // Apply modifiers
-        speed *= creepData.SpeedModifier;
-        health *= creepData.HealthModifier;
         isMoveToWaypointCoroutineRunning = false;
         UpdateHealthBar();
     }

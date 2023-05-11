@@ -4,7 +4,7 @@ using UnityEngine;
 // Abstract and Object Pooling Pattern
 public abstract class Projectile : MonoBehaviour
 {
-    private float damage;
+    protected float damage;
     private bool hasHitTarget = false;
     private const float maxDistanceThreshold = 100f; // Adjust this value as needed
 
@@ -54,7 +54,6 @@ public abstract class Projectile : MonoBehaviour
         {
             creep.TakeDamage(damage);
             hasHitTarget = true;
-
             ReturnToPool();
             hasHitTarget = false;
         }

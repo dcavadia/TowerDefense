@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 82246b66f2414b6499297b0212d3e378, type: 3}
-  m_Name: Wave Small Creep
+  m_Name: WaveSmallCreep
   m_EditorClassIdentifier: 
   creepDataArray:
   - creepData: {fileID: 11400000, guid: 4c844efb18bfa55439274f3a2f1e3003, type: 2}

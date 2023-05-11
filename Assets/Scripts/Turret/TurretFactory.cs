@@ -7,12 +7,7 @@ using UnityEngine;
 //Provide more flexibility in creating related objects and more decoupling in comparision with an abstract class.
 public abstract class TurretFactory
 {
-    public abstract Turret CreateTurret(Vector3 position, Creep target, float range, TurretData turretData);
-}
-
-public class TurretRegularFactory : TurretFactory
-{
-    public override Turret CreateTurret(Vector3 position, Creep target, float range, TurretData turretData)
+    protected Turret CreateTurretInternal(Vector3 position, Creep target, float range, TurretData turretData)
     {
         GameObject turretGameObject = Object.Instantiate(turretData.Prefab);
         turretGameObject.transform.position = position;
@@ -20,9 +15,27 @@ public class TurretRegularFactory : TurretFactory
         turret.Initialize(position, target, range, turretData);
         return turret;
     }
+
+    public abstract Turret CreateTurret(Vector3 position, Creep target, float range, TurretData turretData);
+}
+
+public class TurretRegularFactory : TurretFactory
+{
+    public override Turret CreateTurret(Vector3 position, Creep target, float range, TurretData turretData)
+    {
+        return CreateTurretInternal(position, target, range, turretData);
+    }
 }
 
 public class TurretFreezerFactory : TurretFactory
+{
+    public override Turret CreateTurret(Vector3 position, Creep target, float range, TurretData turretData)
+    {
+        return CreateTurretInternal(position, target, range, turretData);
+    }
+}
+
+public class TurretFireFactory : TurretFactory
 {
     public override Turret CreateTurret(Vector3 position, Creep target, float range, TurretData turretData)
     {
@@ -30,6 +43,7 @@ public class TurretFreezerFactory : TurretFactory
         turretGameObject.transform.position = position;
         var turret = turretGameObject.GetComponent<Turret>();
         turret.Initialize(position, target, range, turretData);
+        //Use some sfx?
         return turret;
     }
 }

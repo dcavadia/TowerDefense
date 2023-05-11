@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82246b66f2414b6499297b0212d3e378, type: 3}
+  m_Name: WaveFastCreep
+  m_EditorClassIdentifier: 
+  creepDataArray:
+  - creepData: {fileID: 11400000, guid: 15f854f324b1a7e49929574c38f33ca1, type: 2}
+    spawnPointId: 1
+  - creepData: {fileID: 11400000, guid: 15f854f324b1a7e49929574c38f33ca1, type: 2}
+    spawnPointId: 1
+  - creepData: {fileID: 11400000, guid: 15f854f324b1a7e49929574c38f33ca1, type: 2}
+    spawnPointId: 1
+  - creepData: {fileID: 11400000, guid: 15f854f324b1a7e49929574c38f33ca1, type: 2}
+    spawnPointId: 1
+  - creepData: {fileID: 11400000, guid: 15f854f324b1a7e49929574c38f33ca1, type: 2}
+    spawnPointId: 1
+  - creepData: {fileID: 11400000, guid: 15f854f324b1a7e49929574c38f33ca1, type: 2}
+    spawnPointId: 2
+  - creepData: {fileID: 11400000, guid: 15f854f324b1a7e49929574c38f33ca1, type: 2}
+    spawnPointId: 2
+  - creepData: {fileID: 11400000, guid: 15f854f324b1a7e49929574c38f33ca1, type: 2}
+    spawnPointId: 2
+  - creepData: {fileID: 11400000, guid: 15f854f324b1a7e49929574c38f33ca1, type: 2}
+    spawnPointId: 2
+  - creepData: {fileID: 11400000, guid: 15f854f324b1a7e49929574c38f33ca1, type: 2}
+    spawnPointId: 4
+  - creepData: {fileID: 11400000, guid: 15f854f324b1a7e49929574c38f33ca1, type: 2}
+    spawnPointId: 4
+  - creepData: {fileID: 11400000, guid: 15f854f324b1a7e49929574c38f33ca1, type: 2}
+    spawnPointId: 4
+  - creepData: {fileID: 11400000, guid: 15f854f324b1a7e49929574c38f33ca1, type: 2}
+    spawnPointId: 4
+  - creepData: {fileID: 11400000, guid: 15f854f324b1a7e49929574c38f33ca1, type: 2}
+    spawnPointId: 1
+  - creepData: {fileID: 11400000, guid: 15f854f324b1a7e49929574c38f33ca1, type: 2}
+    spawnPointId: 1
+  - creepData: {fileID: 11400000, guid: 15f854f324b1a7e49929574c38f33ca1, type: 2}
+    spawnPointId: 1
+  - creepData: {fileID: 11400000, guid: 15f854f324b1a7e49929574c38f33ca1, type: 2}
+    spawnPointId: 1
+  timeBetweenCreeps: 1
+  waveDelay: 1

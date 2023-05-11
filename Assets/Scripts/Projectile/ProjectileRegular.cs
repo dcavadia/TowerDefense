@@ -9,8 +9,8 @@ public class ProjectileRegular : Projectile
         Creep creep = other.gameObject.GetComponent<Creep>();
         if (creep != null)
         {
-            base.OnTriggerEnter(other);
             ApplyEffect(creep);
+            base.OnTriggerEnter(other);
         }
     }
 
