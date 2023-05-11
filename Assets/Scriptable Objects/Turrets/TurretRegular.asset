@@ -13,9 +13,7 @@ MonoBehaviour:
   m_Name: TurretRegular
   m_EditorClassIdentifier: 
   prefab: {fileID: 3312728997542272041, guid: ad95cf0532fb840edb99302196037be4, type: 3}
-  projectile: {fileID: 6247370012072812066, guid: e0286330f5eeafb48ba3bb49042e7a8d,
-    type: 3}
+  projectile: {fileID: 11400000, guid: 9ed04479863880f409af0f322ead1d16, type: 2}
   cost: 1
   range: 10
   fireRate: 1
-  damage: 1

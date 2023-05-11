@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-//Separate the turret logic from the projectile logic, allowing for easy extension and customization.
-public class Projectile : MonoBehaviour
+// Abstract and Object Pooling Pattern
+public abstract class Projectile : MonoBehaviour
 {
     private float damage;
     private bool hasHitTarget = false;
@@ -12,12 +10,17 @@ public class Projectile : MonoBehaviour
 
     private Vector3 initialPosition;
 
+    protected virtual void Awake()
+    {
+        TrackDistanceOfProjectile();
+    }
+
     private void TrackDistanceOfProjectile()
     {
         initialPosition = transform.position;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         if (hasHitTarget)
             return;
@@ -30,20 +33,16 @@ public class Projectile : MonoBehaviour
         {
             ReturnToPool();
             hasHitTarget = false;
-            Debug.Log("Miss shoot");
+            Debug.Log("Missed shot");
         }
     }
 
     public void SetDamage(float damage)
     {
         this.damage = damage;
-        TrackDistanceOfProjectile();
     }
 
-    protected virtual void ApplyEffect(Creep target)
-    {
-        // Default implementation
-    }
+    protected abstract void ApplyEffect(Creep target);
 
     protected virtual void OnTriggerEnter(Collider other)
     {
@@ -57,14 +56,13 @@ public class Projectile : MonoBehaviour
             hasHitTarget = true;
 
             ReturnToPool();
-
             hasHitTarget = false;
         }
     }
 
     private void ReturnToPool()
     {
-        Type type = this.GetType();
+        Type type = GetType();
         ObjectPool<Projectile> pool;
 
         if (!ObjectPoolManager.Instance.ProjectilePools.TryGetValue(type, out pool))
@@ -75,6 +73,4 @@ public class Projectile : MonoBehaviour
 
         pool.ReturnObjectToPool(this);
     }
-
-
 }

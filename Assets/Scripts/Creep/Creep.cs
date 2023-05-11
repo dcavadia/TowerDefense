@@ -1,21 +1,18 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Creep : MonoBehaviour
+// Abstract and Publish-Subscribe pattern
+public abstract class Creep : MonoBehaviour
 {
-    public CreepData data { get; private set; }
-    float health;
-    float speed;
-
-    [SerializeField] private Image healthBarImage;
+    // Encapsulation promotes data integrity :)
+    protected CreepData data { get; private set; }
+    protected float health;
+    protected float speed;
 
     private Vector3 targetPosition;
     private bool isMoveToWaypointCoroutineRunning = false;
 
-    // Publish-Subscribe pattern
     // Delegate types
     public delegate void CreepKilledHandler(Creep creep);
     public delegate void CreepReachedBaseHandler(Creep creep);
@@ -25,6 +22,8 @@ public class Creep : MonoBehaviour
     public event CreepKilledHandler CreepKilled;
     public event CreepReachedBaseHandler CreepReachedBase;
     public event CreepReturnToPoolHandler CreepReturnToPool;
+
+    [SerializeField] protected Image healthBarImage;
 
     public virtual void Init(CreepData creepData, Vector3 basePosition)
     {
@@ -52,30 +51,27 @@ public class Creep : MonoBehaviour
 
     public virtual void ReduceSpeed(float percentage, float duration)
     {
-        if(gameObject.activeSelf)
+        if (gameObject.activeSelf)
             StartCoroutine(ReduceSpeedCoroutine(percentage, duration));
     }
 
     protected virtual void ReachedBase()
     {
-        if (CreepReachedBase != null)
-            CreepReachedBase(this);
+        CreepReachedBase?.Invoke(this);
 
         ReturnCreepToPool();
     }
 
     protected virtual void Die()
     {
-        if (CreepKilled != null)
-            CreepKilled(this);
+        CreepKilled?.Invoke(this);
 
         ReturnCreepToPool();
     }
 
     protected virtual void ReturnCreepToPool()
     {
-        if (CreepReturnToPool != null)
-            CreepReturnToPool(this);
+        CreepReturnToPool?.Invoke(this);
     }
 
     protected virtual void FixedUpdate()
@@ -87,8 +83,6 @@ public class Creep : MonoBehaviour
         }
     }
 
-    //All creeps move in the same way, in the case of each creep moving in a different way, just override this functions in each creep.
-    //Coroutine instead of update since that can be expensive and inefficient, especially if you have a lot of creeps in your game.
     protected virtual IEnumerator MoveToWaypointCoroutine()
     {
         float distanceThreshold = 0.01f;
@@ -97,7 +91,6 @@ public class Creep : MonoBehaviour
         {
             float step = speed * Time.deltaTime;
 
-            //Update position in Spatial Hash Grid
             WaveManager.Instance.SpatialHashGrid.RemoveCreep(this);
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
             WaveManager.Instance.SpatialHashGrid.AddCreep(this);
@@ -111,9 +104,8 @@ public class Creep : MonoBehaviour
 
             if (Vector3.Distance(transform.position, targetPosition) <= distanceThreshold)
             {
-                // Reached waypoint, get next waypoint
                 ReachedBase();
-                yield break; // exit coroutine
+                yield break;
             }
 
             yield return null;
@@ -131,16 +123,17 @@ public class Creep : MonoBehaviour
         speed += amountReduced;
     }
 
-    private void UpdateHealthBar()
+    protected void UpdateHealthBar()
     {
         if (healthBarImage != null)
         {
-            // Calculate the fill amount based on current health
             float fillAmount = health / data.Health;
-
-            // Set the fill amount of the health bar image
             healthBarImage.fillAmount = fillAmount;
         }
     }
 
+    public CreepData GetData()
+    {
+        return data;
+    }
 }

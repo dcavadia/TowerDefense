@@ -44,7 +44,7 @@ public class TurretRegular : Turret
             // Instantiate and shoot the projectile
             Projectile projectile = SpawnProjectile();
 
-            projectile.SetDamage(turretData.Damage);
+            projectile.SetDamage(turretData.Projectile.Damage);
             Rigidbody rb = projectile.gameObject.GetComponent<Rigidbody>();
 
             rb.velocity = (estimatedTargetPosition - transform.position).normalized * projectileSpeed;

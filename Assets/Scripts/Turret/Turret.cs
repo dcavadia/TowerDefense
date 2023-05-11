@@ -151,7 +151,7 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
     protected Projectile SpawnProjectile()
     {
         ObjectPool<Projectile> pool;
-        Component component = turretData.Projectile.GetComponent<Projectile>();
+        Component component = turretData.Projectile.Prefab.GetComponent<Projectile>();
         Type type = component.GetType();
 
         if (!ObjectPoolManager.Instance.ProjectilePools.TryGetValue(type, out pool))
@@ -162,8 +162,8 @@ public abstract class Turret : MonoBehaviour, ITurretObserver
 
         Projectile projectile = pool.GetObjectFromPool();
         if (projectile == null)
-        {
-            GameObject newProjectile = Instantiate(turretData.Projectile, new Vector3(transform.position.x, 1f, transform.position.z), Quaternion.identity);
+        {// Pool empty
+            GameObject newProjectile = Instantiate(turretData.Projectile.Prefab, new Vector3(transform.position.x, 1f, transform.position.z), Quaternion.identity);
             projectile = newProjectile.GetComponent<Projectile>();
         }
         else

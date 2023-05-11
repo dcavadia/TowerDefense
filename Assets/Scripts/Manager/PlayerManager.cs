@@ -19,7 +19,7 @@ public class PlayerManager : SingletonComponent<PlayerManager>
 
     public void ReduceHealth(Creep creep)
     {
-        health -= creep.data.Damage;
+        health -= creep.GetData().Damage;
         if (health <= 0)
         {
             GameOver();

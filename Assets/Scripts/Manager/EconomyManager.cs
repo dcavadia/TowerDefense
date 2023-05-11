@@ -23,7 +23,7 @@ public class EconomyManager : SingletonComponent<EconomyManager>
 
     public void AddCoin(Creep creep)
     {
-        coins += creep.data.CoinsReward;
+        coins += creep.GetData().CoinsReward;
         creep.CreepKilled -= AddCoin;
     }
 

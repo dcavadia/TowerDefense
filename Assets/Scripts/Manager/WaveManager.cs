@@ -5,20 +5,13 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-//Use a combination of the Observer, Command and Object Pooling patterns
-//By using the Observer pattern to notify the turrets of new creeps, and the Command pattern to manage the spawning of creeps,
-//the wave manager can be easily modified and extended without affecting other parts of the code.
-//With Object pooling, we can avoid the performance overhead of instantiating and destroying objects during gameplay,
-//which can lead to significant improvements in the game's framerate and overall performance.
+// Singleton, Publish-Subscribe, Command, Object Pooling Pattern
 public class WaveManager : SingletonComponent<WaveManager>
 {
     public List<SpawnPointData> SpawnPoints;
     public LevelData LevelData;
     public PlayerData PlayerData;
     public GameObject Base;
-
-    // Use the Observer pattern to notify the turrets of new creeps
-    //public event Action<CreepController> OnCreepSpawned;
 
     private int currentWave = 0;
     private int creepsRemainingInWave = 0;
