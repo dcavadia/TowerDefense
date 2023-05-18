@@ -75,6 +75,7 @@ public class TurretPlacementManager : SingletonComponent<TurretPlacementManager>
         selectedTurretType = turretGhost.GetComponent<Turret>();
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         if (turretGhost != null && selectedTurretData != null)
@@ -84,6 +85,7 @@ public class TurretPlacementManager : SingletonComponent<TurretPlacementManager>
             Handles.DrawWireDisc(turretGhost.transform.position, Vector3.up, selectedTurretData.Range);
         }
     }
+#endif
 }
-    
+
 
