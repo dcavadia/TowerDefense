@@ -3,22 +3,22 @@ using UnityEngine;
 
 public class SpatialHashGrid
 {
-    private Dictionary<Vector2Int, List<Creep>> cells; // Dictionary to store cells and their corresponding creeps
+    private Dictionary<Vector2Int, HashSet<Creep>> cells; // Dictionary to store cells and their corresponding creeps
     private float cellSize; // Size of each grid cell
 
     public SpatialHashGrid(float cellSize)
     {
         this.cellSize = cellSize;
-        cells = new Dictionary<Vector2Int, List<Creep>>();
+        cells = new Dictionary<Vector2Int, HashSet<Creep>>();
     }
 
     // Add a creep to the grid
     public void AddCreep(Creep creep)
     {
         Vector2Int cell = GetCell(creep.transform.position); // Get the cell position based on the creep's position
-        if (!cells.TryGetValue(cell, out List<Creep> creeps))
+        if (!cells.TryGetValue(cell, out HashSet<Creep> creeps))
         {
-            creeps = new List<Creep>();
+            creeps = new HashSet<Creep>();
             cells[cell] = creeps;
         }
 
@@ -29,7 +29,7 @@ public class SpatialHashGrid
     public void RemoveCreep(Creep creep)
     {
         Vector2Int cell = GetCell(creep.transform.position); // Get the cell position based on the creep's position
-        if (cells.TryGetValue(cell, out List<Creep> creeps))
+        if (cells.TryGetValue(cell, out HashSet<Creep> creeps))
         {
             creeps.Remove(creep);
             if (creeps.Count == 0)
@@ -48,7 +48,7 @@ public class SpatialHashGrid
         // Iterate through the adjacent cells around the turret
         foreach (var cell in GetAdjacentCells(turretPosition, range))
         {
-            if (cells.TryGetValue(cell, out List<Creep> cellCreeps))
+            if (cells.TryGetValue(cell, out HashSet<Creep> cellCreeps))
             {
                 // Iterate through the creeps in the current cell
                 foreach (var creep in cellCreeps)
